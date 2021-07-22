@@ -14,7 +14,7 @@ This is the package of utilities for building signature and call data of EIP-261
 
 | Statements                                                                      | Branches                                                               | Functions                                                                | Lines                                                                 |
 | ------------------------------------------------------------------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------ | --------------------------------------------------------------------- |
-| ![Statements](https://img.shields.io/badge/statements-96.63%25-brightgreen.svg) | ![Branches](https://img.shields.io/badge/branches-81.82%25-yellow.svg) | ![Functions](https://img.shields.io/badge/functions-82.35%25-yellow.svg) | ![Lines](https://img.shields.io/badge/lines-96.63%25-brightgreen.svg) |
+| ![Statements](https://img.shields.io/badge/statements-99.39%25-brightgreen.svg) | ![Branches](https://img.shields.io/badge/branches-96.3%25-brightgreen.svg) | ![Functions](https://img.shields.io/badge/functions-94.12%25-brightgreen.svg) | ![Lines](https://img.shields.io/badge/lines-99.39%25-brightgreen.svg) |
 
 ## Installation
 
@@ -138,4 +138,32 @@ const callData = await eip2612PermitUtils.buildPermitCallData(
 );
 
 console.log('Permit call data', callData);
+```
+
+### Get nonce from a token contract
+
+```typescript
+import {
+    Eip2612PermitUtils,
+    Web3ProviderConnector,
+} from '@1inch/permit-signed-approvals-utils';
+import Web3 from 'web3';
+
+const tokenAddress = '0x111111111117dc0aa78b770fa6a738034120c302';
+const walletAddress = '0x2c9b2dbdba8a9c969ac24153f5c1c23cb0e63914';
+const privateKey =
+    '965e092fdfc08940d2bd05c7b5c7e1c51e283e92c7f52bbf1408973ae9a9acb7';
+
+const web3 = new Web3('...');
+// You can create and use a custom provider connector (for example: ethers)
+// For server side, you can use: new PrivateKeyProviderConnector(privateKey, web3);
+const connector = new Web3ProviderConnector(web3);
+const eip2612PermitUtils = new Eip2612PermitUtils(connector);
+
+const nonce = await eip2612PermitUtils.getTokenNonce(
+    tokenAddress,
+    walletAddress
+);
+
+console.log('Nonce', nonce);
 ```

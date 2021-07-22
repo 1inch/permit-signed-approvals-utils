@@ -85,4 +85,53 @@ describe('Web3ProviderConnector', () => {
 
         verify(eth.Contract).once();
     });
+
+    it('ethCall() should create a contact call', async () => {
+        const ethCall = jest.fn();
+        const expectedResult = 'test';
+        const contractAddress = '0x111111111117dc0aa78b770fa6a738034120c302';
+        const callData = '0xee1';
+
+        when(web3Provider.eth).thenReturn({
+            call: ethCall
+        } as any);
+
+
+        ethCall.mockReturnValue(Promise.resolve(expectedResult));
+
+        const result = await web3ProviderConnector.ethCall(
+            contractAddress,
+            callData
+        );
+
+        expect(result).toBe(expectedResult);
+        expect(ethCall).toHaveBeenCalledTimes(1);
+        expect(ethCall).toHaveBeenCalledWith({
+            to: contractAddress,
+            data: callData,
+        });
+    });
+
+    it('decodeABIParameter()', () => {
+        const decodeParameter = jest.fn();
+        const expectedResult = 'test';
+        const type = 'type';
+        const hex = 'hex';
+
+        when(web3Provider.eth).thenReturn({
+            abi: {
+                decodeParameter
+            }
+        } as any);
+        decodeParameter.mockReturnValue(expectedResult);
+
+        const result = web3ProviderConnector.decodeABIParameter(
+            type,
+            hex
+        );
+
+        expect(result).toBe(expectedResult);
+        expect(decodeParameter).toHaveBeenCalledTimes(1);
+        expect(decodeParameter).toHaveBeenCalledWith(type, hex);
+    });
 });

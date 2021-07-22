@@ -37,7 +37,9 @@ export function buildPermitTypedData(
 
 export function fromRpcSig(sig: string): {v: number; r: Buffer; s: Buffer} {
     const signature = Buffer.from(
-        sig.startsWith('0x') ? sig.slice(2) : sig,
+        sig.startsWith('0x')
+            ? sig.slice(2)
+            : sig,
         'hex'
     );
 
@@ -47,7 +49,9 @@ export function fromRpcSig(sig: string): {v: number; r: Buffer; s: Buffer} {
     }
 
     // support both versions of `eth_sign` responses
-    const v = signature[64] < 27 ? signature[64] + 27 : signature[64];
+    const v = signature[64] < 27
+        ? signature[64] + 27
+        : signature[64];
 
     return {
         v: v,
