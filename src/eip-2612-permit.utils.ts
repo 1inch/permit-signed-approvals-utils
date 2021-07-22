@@ -21,7 +21,7 @@ export class Eip2612PermitUtils {
         chainId: ChainId,
         tokenName: string,
         tokenAddress: string
-    ) {
+    ): Promise<string> {
         const permitData = buildPermitTypedData(
             chainId,
             tokenName,
@@ -47,7 +47,7 @@ export class Eip2612PermitUtils {
         chainId: ChainId,
         tokenName: string,
         tokenAddress: string
-    ) {
+    ): Promise<string> {
         const permitSignature = await this.buildPermitSignature(
             permitParams,
             chainId,

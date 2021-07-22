@@ -16,6 +16,7 @@ describe('Web3ProviderConnector', () => {
         1,
         tokenAddress,
         tokenName,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         {} as any
     );
 
@@ -94,6 +95,7 @@ describe('Web3ProviderConnector', () => {
 
         when(web3Provider.eth).thenReturn({
             call: ethCall
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } as any);
 
 
@@ -122,6 +124,7 @@ describe('Web3ProviderConnector', () => {
             abi: {
                 decodeParameter
             }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } as any);
         decodeParameter.mockReturnValue(expectedResult);
 

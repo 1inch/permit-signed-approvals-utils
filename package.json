@@ -1,5 +1,5 @@
 {
-    "name": "permit-signed-approvals-utils",
+    "name": "@1inch/permit-signed-approvals-utils",
     "version": "1.0.0",
     "description": "Utils library for EIP-2612: permit – 712-signed approvals",
     "main": "index.js",
@@ -18,7 +18,8 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/1inch/permit-signed-approvals-utils.git"
+        "url": "ssh://git@github.com:1inch/permit-signed-approvals-utils.git",
+        "directory": "@1inch/permit-signed-approvals-utils"
     },
     "author": "",
     "license": "ISC",
