@@ -2,7 +2,7 @@
   <img src="https://app.1inch.io/assets/images/logo.svg" width="200" alt="1inch network" />
 </p>
 
-# Utils library for EIP-2612: permit – 712-signed approvals
+# Utils library for EIP-2612: permit based on EIP-712 signed approvals
 
 This is the package of utilities for building signature and call data of EIP-2612 permits
 
