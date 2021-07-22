@@ -2,6 +2,7 @@ import {EIP712TypedData} from './model/eip712.model';
 import {ChainId} from './model/chain.model';
 import {PermitParams} from './model/permit.model';
 
+// eslint-disable-next-line max-lines-per-function
 export function buildPermitTypedData(
     chainId: ChainId,
     tokenName: string,
