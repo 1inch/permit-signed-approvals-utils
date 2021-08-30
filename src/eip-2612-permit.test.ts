@@ -70,4 +70,27 @@ describe('Eip2612PermitUtils', () => {
                 '4c94f1fa492007dea3a3c305353bf3430b1ca506dd630ce1fd3da09bd387b2f3'
         );
     });
+
+    it('Build permit signature for token with domain that does not include version', async () => {
+        const tokenAddress = '0x5ea29eee799aa7cc379fde5cf370bc24f2ea7c81';
+        const signature = await eip2612PermitUtils.buildPermitSignature(
+            permitParams,
+            chainId,
+            'Keep3r BSC Network',
+            tokenAddress
+        );
+        const domainTypeHash = await eip2612PermitUtils.getDomainTypeHash(
+            tokenAddress
+        );
+
+        expect(signature).toBe(
+            '0x' +
+                '46083d5525dec0da5fd05c4e7473f1cf6019a9160400187ffd3495861940f2c5' +
+                '64c26893ffd9fe42e4daae6aab541ebb1d5a4229cc732e838e94f14d2693beb2' +
+                '1c'
+        );
+        expect(domainTypeHash).toBe(
+            '0x797cfab58fcb15f590eb8e4252d5c228ff88f94f907e119e80c4393a946e8f35'
+        );
+    });
 });

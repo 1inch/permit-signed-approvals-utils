@@ -1,5 +1,9 @@
-import { buildPermitTypedData, fromRpcSig, getPermitContractCallParams } from './eip-2612-permit.helper';
-import { PermitParams } from './model/permit.model';
+import {
+    buildPermitTypedData,
+    fromRpcSig,
+    getPermitContractCallParams,
+} from './eip-2612-permit.helper';
+import {PermitParams} from './model/permit.model';
 
 describe('eip-2612 permit helpers', () => {
     const chainId = 56;
@@ -28,7 +32,8 @@ describe('eip-2612 permit helpers', () => {
     });
 
     it('fromRpcSig()', () => {
-        const signature = '0x' +
+        const signature =
+            '0x' +
             '3b448216a78f91e84db06cf54eb1e3758425bd97ffb9d6941ce437ec7a9c2c17' +
             '4c94f1fa492007dea3a3c305353bf3430b1ca506dd630ce1fd3da09bd387b2f3' +
             '1c';
@@ -38,7 +43,8 @@ describe('eip-2612 permit helpers', () => {
     });
 
     it('fromRpcSig() should throw error when signature length is invalid', () => {
-        const signature = '0x' +
+        const signature =
+            '0x' +
             '3b448216a78f91e84db06cf54eb1e3758425bd97ffb9d6941ce437ec7a9c2c17' +
             '4c94f1fa492007dea3a3c305353bf3430b1ca506dd630ce1fd3da09bd387b2f3' +
             '1c11001100';
@@ -48,7 +54,8 @@ describe('eip-2612 permit helpers', () => {
     });
 
     it('fromRpcSig() should cut 0x from the signature', () => {
-        const signature = '3b448216a78f91e84db06cf54eb1e3758425bd97ffb9d6941ce437ec7a9c2c17' +
+        const signature =
+            '3b448216a78f91e84db06cf54eb1e3758425bd97ffb9d6941ce437ec7a9c2c17' +
             '4c94f1fa492007dea3a3c305353bf3430b1ca506dd630ce1fd3da09bd387b2f3' +
             '1c';
 
@@ -59,7 +66,8 @@ describe('eip-2612 permit helpers', () => {
     });
 
     it('fromRpcSig() should support both versions of `eth_sign` responses', () => {
-        const signature = '3b448216a78f91e84db06cf54eb1e3758425bd97ffb9d6941ce437ec7a9c2c17' +
+        const signature =
+            '3b448216a78f91e84db06cf54eb1e3758425bd97ffb9d6941ce437ec7a9c2c17' +
             '4c94f1fa492007dea3a3c305353bf3430b1ca506dd630ce1fd3da09bd387b2f3' +
             '1a';
 
@@ -69,7 +77,8 @@ describe('eip-2612 permit helpers', () => {
     });
 
     it('getPermitContractCallParams()', () => {
-        const signature = '0x' +
+        const signature =
+            '0x' +
             '3b448216a78f91e84db06cf54eb1e3758425bd97ffb9d6941ce437ec7a9c2c17' +
             '4c94f1fa492007dea3a3c305353bf3430b1ca506dd630ce1fd3da09bd387b2f3' +
             '1c';
