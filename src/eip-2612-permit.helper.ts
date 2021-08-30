@@ -2,21 +2,32 @@ import {EIP712TypedData} from './model/eip712.model';
 import {ChainId} from './model/chain.model';
 import {PermitParams} from './model/permit.model';
 
+export function inputIsNotNullOrUndefined<T>(
+    input: null | undefined | T
+): input is T {
+    return input !== null && input !== undefined;
+}
+
 // eslint-disable-next-line max-lines-per-function
 export function buildPermitTypedData(
     chainId: ChainId,
     tokenName: string,
     tokenAddress: string,
-    params: PermitParams
+    params: PermitParams,
+    isDomainWithoutVersion = false
 ): EIP712TypedData {
     return {
         types: {
             EIP712Domain: [
                 {name: 'name', type: 'string'},
-                {name: 'version', type: 'string'},
+                ...[
+                    isDomainWithoutVersion
+                        ? null
+                        : {name: 'version', type: 'string'},
+                ],
                 {name: 'chainId', type: 'uint256'},
                 {name: 'verifyingContract', type: 'address'},
-            ],
+            ].filter(inputIsNotNullOrUndefined),
             Permit: [
                 {name: 'owner', type: 'address'},
                 {name: 'spender', type: 'address'},
@@ -26,12 +37,18 @@ export function buildPermitTypedData(
             ],
         },
         primaryType: 'Permit',
-        domain: {
-            name: tokenName,
-            version: '1',
-            chainId: chainId,
-            verifyingContract: tokenAddress,
-        },
+        domain: isDomainWithoutVersion
+            ? {
+                  name: tokenName,
+                  chainId: chainId,
+                  verifyingContract: tokenAddress,
+              }
+            : {
+                  name: tokenName,
+                  version: '1',
+                  chainId: chainId,
+                  verifyingContract: tokenAddress,
+              },
         message: params,
     };
 }

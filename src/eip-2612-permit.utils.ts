@@ -1,6 +1,8 @@
 import {TypedDataUtils} from 'eth-sig-util';
 
 import {
+    DOMAIN_TYPEHASH_ABI,
+    DOMAINS_WITHOUT_VERSION,
     EIP_2612_PERMIT_ABI,
     EIP_2612_PERMIT_SELECTOR,
     ERC_20_NONCES_ABI,
@@ -26,7 +28,8 @@ export class Eip2612PermitUtils {
             chainId,
             tokenName,
             tokenAddress,
-            permitParams
+            permitParams,
+            await this.isDomainWithoutVersion(tokenAddress)
         );
         const dataHash = TypedDataUtils.hashStruct(
             permitData.primaryType,
@@ -35,11 +38,7 @@ export class Eip2612PermitUtils {
             true
         ).toString('hex');
 
-        return this.connector.signTypedData(
-            permitParams.owner,
-            permitData,
-            dataHash
-        );
+        return this.connector.signTypedData(permitParams.owner, permitData, dataHash);
     }
 
     async buildPermitCallData(
@@ -78,5 +77,27 @@ export class Eip2612PermitUtils {
         return this.connector.ethCall(tokenAddress, callData).then((res) => {
             return Number(res);
         });
+    }
+
+    async getDomainTypeHash(tokenAddress: string): Promise<string | null> {
+        try {
+            return await this.connector.ethCall(
+                tokenAddress,
+                this.connector.contractEncodeABI(
+                    DOMAIN_TYPEHASH_ABI,
+                    tokenAddress,
+                    'DOMAIN_TYPEHASH',
+                    []
+                )
+            );
+        } catch (e) {
+            return Promise.resolve(null);
+        }
+    }
+
+    async isDomainWithoutVersion(tokenAddress: string): Promise<boolean> {
+        const domainTypeHash = await this.getDomainTypeHash(tokenAddress);
+
+        return !!domainTypeHash && DOMAINS_WITHOUT_VERSION.includes(domainTypeHash.toLowerCase());
     }
 }
