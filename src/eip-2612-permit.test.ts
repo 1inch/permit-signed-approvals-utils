@@ -93,4 +93,14 @@ describe('Eip2612PermitUtils', () => {
             '0x797cfab58fcb15f590eb8e4252d5c228ff88f94f907e119e80c4393a946e8f35'
         );
     });
+
+    it('Build permit signature for token with domain that does not include version', async () => {
+        const domainSeparator = await eip2612PermitUtils.getDomainSeparator(
+            '0x111111111117dc0aa78b770fa6a738034120c302'
+        );
+
+        expect(domainSeparator).toBe(
+            '0x236db5742c6d63bc63a98b52141886d21552252e5038fc750bd0c6212b6f683f'
+        );
+    });
 });
