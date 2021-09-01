@@ -1,6 +1,7 @@
 import {TypedDataUtils} from 'eth-sig-util';
 
 import {
+    DOMAIN_SEPARATOR_ABI,
     DOMAIN_TYPEHASH_ABI,
     DOMAINS_WITHOUT_VERSION,
     EIP_2612_PERMIT_ABI,
@@ -93,6 +94,18 @@ export class Eip2612PermitUtils {
         } catch (e) {
             return Promise.resolve(null);
         }
+    }
+
+    async getDomainSeparator(tokenAddress: string): Promise<string> {
+        return await this.connector.ethCall(
+            tokenAddress,
+            this.connector.contractEncodeABI(
+                DOMAIN_SEPARATOR_ABI,
+                tokenAddress,
+                'DOMAIN_SEPARATOR',
+                []
+            )
+        );
     }
 
     async isDomainWithoutVersion(tokenAddress: string): Promise<boolean> {

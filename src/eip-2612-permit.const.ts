@@ -89,3 +89,19 @@ export const DOMAIN_TYPEHASH_ABI: AbiItem[] = [
         type: 'function',
     },
 ];
+
+export const DOMAIN_SEPARATOR_ABI: AbiItem[] = [
+    {
+        "inputs": [],
+        "name": "DOMAIN_SEPARATOR",
+        "outputs": [
+            {
+                "internalType": "bytes32",
+                "name": "",
+                "type": "bytes32"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+];
