@@ -23,14 +23,16 @@ export class Eip2612PermitUtils {
         permitParams: PermitParams,
         chainId: ChainId,
         tokenName: string,
-        tokenAddress: string
+        tokenAddress: string,
+        version?: string
     ): Promise<string> {
         const permitData = buildPermitTypedData(
             chainId,
             tokenName,
             tokenAddress,
             permitParams,
-            await this.isDomainWithoutVersion(tokenAddress)
+            await this.isDomainWithoutVersion(tokenAddress),
+            version
         );
         const dataHash = TypedDataUtils.hashStruct(
             permitData.primaryType,
@@ -46,13 +48,15 @@ export class Eip2612PermitUtils {
         permitParams: PermitParams,
         chainId: ChainId,
         tokenName: string,
-        tokenAddress: string
+        tokenAddress: string,
+        version?: string
     ): Promise<string> {
         const permitSignature = await this.buildPermitSignature(
             permitParams,
             chainId,
             tokenName,
-            tokenAddress
+            tokenAddress,
+            version
         );
         const permitCallData = this.connector.contractEncodeABI(
             EIP_2612_PERMIT_ABI,

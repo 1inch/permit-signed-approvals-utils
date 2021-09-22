@@ -14,8 +14,11 @@ export function buildPermitTypedData(
     tokenName: string,
     tokenAddress: string,
     params: PermitParams,
-    isDomainWithoutVersion = false
+    isDomainWithoutVersion = false,
+    version = '1'
 ): EIP712TypedData {
+    const domainCommon = {name: tokenName, chainId, verifyingContract: tokenAddress}
+
     return {
         types: {
             EIP712Domain: [
@@ -37,18 +40,7 @@ export function buildPermitTypedData(
             ],
         },
         primaryType: 'Permit',
-        domain: isDomainWithoutVersion
-            ? {
-                  name: tokenName,
-                  chainId: chainId,
-                  verifyingContract: tokenAddress,
-              }
-            : {
-                  name: tokenName,
-                  version: '1',
-                  chainId: chainId,
-                  verifyingContract: tokenAddress,
-              },
+        domain: isDomainWithoutVersion ? domainCommon : {...domainCommon, version},
         message: params,
     };
 }
