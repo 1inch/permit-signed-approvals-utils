@@ -1,23 +1,24 @@
 import {TypedDataUtils} from 'eth-sig-util';
-
+import {ProviderConnector} from './connector/provider.connector';
 import {
+    DAI_EIP_2612_PERMIT_ABI, DAI_PERMIT_SELECTOR,
+    daiPermitModelFields,
     DOMAIN_SEPARATOR_ABI,
     DOMAIN_TYPEHASH_ABI,
     DOMAINS_WITHOUT_VERSION,
     EIP_2612_PERMIT_ABI,
     EIP_2612_PERMIT_SELECTOR,
-    ERC_20_NONCES_ABI,
+    ERC_20_NONCES_ABI, PERMIT_TYPEHASH_ABI,
 } from './eip-2612-permit.const';
 import {
-    buildPermitTypedData,
+    buildPermitTypedData, getDaiPermitContractCallParams,
     getPermitContractCallParams,
 } from './eip-2612-permit.helper';
 import {ChainId} from './model/chain.model';
-import {ProviderConnector} from './connector/provider.connector';
-import {PermitParams} from './model/permit.model';
+import {DaiPermitParams, PermitParams} from './model/permit.model';
 
 export class Eip2612PermitUtils {
-    constructor(private connector: ProviderConnector) {}
+    constructor(protected connector: ProviderConnector) {}
 
     async buildPermitSignature(
         permitParams: PermitParams,
@@ -26,14 +27,14 @@ export class Eip2612PermitUtils {
         tokenAddress: string,
         version?: string
     ): Promise<string> {
-        const permitData = buildPermitTypedData(
+        const permitData = buildPermitTypedData({
             chainId,
             tokenName,
             tokenAddress,
-            permitParams,
-            await this.isDomainWithoutVersion(tokenAddress),
+            params: permitParams,
+            isDomainWithoutVersion: await this.isDomainWithoutVersion(tokenAddress),
             version
-        );
+        });
         const dataHash = TypedDataUtils.hashStruct(
             permitData.primaryType,
             permitData.message,
@@ -68,6 +69,53 @@ export class Eip2612PermitUtils {
         return permitCallData.replace(EIP_2612_PERMIT_SELECTOR, '0x');
     }
 
+    async buildDaiLikePermitSignature(
+        params: DaiPermitParams,
+        chainId: ChainId,
+        tokenName: string,
+        tokenAddress: string,
+        version?: string
+    ): Promise<string> {
+        const permitData = buildPermitTypedData({
+            chainId, tokenName, tokenAddress, params,
+            isDomainWithoutVersion: await this.isDomainWithoutVersion(tokenAddress),
+            version,
+            permitModelFields: daiPermitModelFields
+        });
+        const dataHash = TypedDataUtils.hashStruct(
+            permitData.primaryType,
+            permitData.message,
+            permitData.types,
+            true
+        ).toString('hex');
+
+        return this.connector.signTypedData(params.holder, permitData, dataHash);
+    }
+
+    async buildDaiLikePermitCallData(
+        permitParams: DaiPermitParams,
+        chainId: ChainId,
+        tokenName: string,
+        tokenAddress: string,
+        version?: string
+    ): Promise<string> {
+        const permitSignature = await this.buildDaiLikePermitSignature(
+            permitParams,
+            chainId,
+            tokenName,
+            tokenAddress,
+            version
+        );
+        const permitCallData = this.connector.contractEncodeABI(
+            DAI_EIP_2612_PERMIT_ABI,
+            tokenAddress,
+            'permit',
+            getDaiPermitContractCallParams(permitParams, permitSignature)
+        );
+
+        return permitCallData.replace(DAI_PERMIT_SELECTOR, '0x');
+    }
+
     getTokenNonce(
         tokenAddress: string,
         walletAddress: string
@@ -92,6 +140,22 @@ export class Eip2612PermitUtils {
                     DOMAIN_TYPEHASH_ABI,
                     tokenAddress,
                     'DOMAIN_TYPEHASH',
+                    []
+                )
+            );
+        } catch (e) {
+            return Promise.resolve(null);
+        }
+    }
+
+    async getPermitTypeHash(tokenAddress: string): Promise<string | null> {
+        try {
+            return await this.connector.ethCall(
+                tokenAddress,
+                this.connector.contractEncodeABI(
+                    PERMIT_TYPEHASH_ABI,
+                    tokenAddress,
+                    'PERMIT_TYPEHASH',
                     []
                 )
             );

@@ -21,12 +21,12 @@ describe('eip-2612 permit helpers', () => {
     };
 
     it('buildPermitTypedData()', () => {
-        const data = buildPermitTypedData(
+        const data = buildPermitTypedData({
             chainId,
             tokenName,
             tokenAddress,
-            permitParams
-        );
+            params: permitParams
+        });
 
         expect(data).toMatchSnapshot();
     });

@@ -25,12 +25,12 @@ describe('PrivateKeyProviderConnector', () => {
         nonce: 0,
         deadline: 192689033,
     };
-    const typedData = buildPermitTypedData(
-        1,
+    const typedData = buildPermitTypedData({
+        chainId: 1,
         tokenAddress,
         tokenName,
-        permitParams
-    );
+        params: permitParams
+    });
 
     beforeEach(() => {
         web3Provider = mock<Web3>();
@@ -44,9 +44,9 @@ describe('PrivateKeyProviderConnector', () => {
         const walletAddress = '0xa07c1d51497fb6e66aa2329cecb86fca0a957fdb';
         const expectedSignature =
             '0x' +
-            'c4c689bfcdf6f8a1f697750be56026a6f4b990be31a7c868a58d7bd7c363d92b' +
-            '6ab34501e3cdc2d4aa5ff90ed89805d9ee13b1212f73f4626002d389a8a3ab64' +
-            '1b';
+            'fe8e594b9843d16febbb10319dfab9f8d3f1ca5bb634a0d33ea056dd62fd5d25' +
+            '1b34e311438469286165fbae77d6770bca26d5d231a346a16e954b2226dec613' +
+            '1c';
 
         const signature = await privateKeyProviderConnector.signTypedData(
             walletAddress,

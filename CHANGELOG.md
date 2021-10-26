@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.2](https://github.com/1inch/permit-signed-approvals-utils/compare/v1.2.1...v1.2.2) (2021-09-24)
+
+
+### Features
+
+* support tokens with upgradable contracts ([2debb56](https://github.com/1inch/permit-signed-approvals-utils/commit/2debb5646f9e171f01160e942f6cc971a9223ee7))
+
 ### [1.2.1](https://github.com/1inch/permit-signed-approvals-utils/compare/v1.2.0...v1.2.1) (2021-09-01)
 
 
