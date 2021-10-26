@@ -14,7 +14,7 @@ export interface EIP712Parameter {
     type: string;
 }
 
-export declare type EIP712ObjectValue = string | number | EIP712Object;
+export declare type EIP712ObjectValue = string | number | boolean | EIP712Object;
 
 export interface EIP712Object {
     [key: string]: EIP712ObjectValue;

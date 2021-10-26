@@ -1,6 +1,7 @@
-import {EIP712TypedData} from './model/eip712.model';
-import {ChainId} from './model/chain.model';
-import {PermitParams} from './model/permit.model';
+import { eip2612PermitModelFields } from './eip-2612-permit.const';
+import { EIP712TypedData } from './model/eip712.model';
+import { DaiPermitParams, PermitParams } from './model/permit.model';
+import {PermitTypedDataParamsModel} from './model/permit-typed-data-params.model';
 
 export function inputIsNotNullOrUndefined<T>(
     input: null | undefined | T
@@ -9,15 +10,20 @@ export function inputIsNotNullOrUndefined<T>(
 }
 
 // eslint-disable-next-line max-lines-per-function
-export function buildPermitTypedData(
-    chainId: ChainId,
-    tokenName: string,
-    tokenAddress: string,
-    params: PermitParams,
+export function buildPermitTypedData({
+    chainId,
+    tokenName,
+    tokenAddress,
+    params,
     isDomainWithoutVersion = false,
-    version = '1'
-): EIP712TypedData {
-    const domainCommon = {name: tokenName, chainId, verifyingContract: tokenAddress}
+    version = '1',
+    permitModelFields = eip2612PermitModelFields
+}: PermitTypedDataParamsModel): EIP712TypedData {
+    const domainCommon = {
+        name: tokenName,
+        chainId,
+        verifyingContract: tokenAddress
+    };
 
     return {
         types: {
@@ -31,16 +37,12 @@ export function buildPermitTypedData(
                 {name: 'chainId', type: 'uint256'},
                 {name: 'verifyingContract', type: 'address'},
             ].filter(inputIsNotNullOrUndefined),
-            Permit: [
-                {name: 'owner', type: 'address'},
-                {name: 'spender', type: 'address'},
-                {name: 'value', type: 'uint256'},
-                {name: 'nonce', type: 'uint256'},
-                {name: 'deadline', type: 'uint256'},
-            ],
+            Permit: permitModelFields,
         },
         primaryType: 'Permit',
-        domain: isDomainWithoutVersion ? domainCommon : {...domainCommon, version},
+        domain: isDomainWithoutVersion
+            ? domainCommon
+            : { ...domainCommon, version },
         message: params,
     };
 }
@@ -81,6 +83,24 @@ export function getPermitContractCallParams(
         permitParams.spender,
         permitParams.value,
         permitParams.deadline,
+        v,
+        r,
+        s,
+    ];
+}
+
+export function getDaiPermitContractCallParams(
+    permitParams: DaiPermitParams,
+    permitSignature: string
+): (string | number | boolean | Buffer)[] {
+    const {v, r, s} = fromRpcSig(permitSignature);
+
+    return [
+        permitParams.holder,
+        permitParams.spender,
+        permitParams.nonce,
+        permitParams.expiry,
+        true,
         v,
         r,
         s,
