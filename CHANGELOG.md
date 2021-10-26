@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0](https://github.com/1inch/permit-signed-approvals-utils/compare/v1.2.2...v1.3.0) (2021-10-26)
+
+
+### ⚠ BREAKING CHANGES
+
+* support permits for DAI-like tokens
+
+### Features
+
+* support permits for DAI-like tokens ([fbe889b](https://github.com/1inch/permit-signed-approvals-utils/commit/fbe889b1120a30679dcb2fb2effdcaab85a48dc3))
+
 ### [1.2.2](https://github.com/1inch/permit-signed-approvals-utils/compare/v1.2.1...v1.2.2) (2021-09-24)
 
 
