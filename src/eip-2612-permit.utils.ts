@@ -1,12 +1,12 @@
-import {TypedDataUtils} from 'eth-sig-util';
+import {TypedDataUtils, recoverTypedSignature_v4, TypedMessage} from 'eth-sig-util';
 import {ProviderConnector} from './connector/provider.connector';
 import {
-    DAI_EIP_2612_PERMIT_ABI, DAI_PERMIT_SELECTOR,
+    DAI_EIP_2612_PERMIT_ABI, DAI_EIP_2612_PERMIT_INPUTS, DAI_PERMIT_SELECTOR,
     daiPermitModelFields,
     DOMAIN_SEPARATOR_ABI,
     DOMAIN_TYPEHASH_ABI,
     DOMAINS_WITHOUT_VERSION,
-    EIP_2612_PERMIT_ABI,
+    EIP_2612_PERMIT_ABI, EIP_2612_PERMIT_INPUTS,
     EIP_2612_PERMIT_SELECTOR,
     ERC_20_NONCES_ABI, PERMIT_TYPEHASH_ABI,
 } from './eip-2612-permit.const';
@@ -16,6 +16,8 @@ import {
 } from './eip-2612-permit.helper';
 import {ChainId} from './model/chain.model';
 import {DaiPermitParams, PermitParams} from './model/permit.model';
+import {MessageTypes} from './model/eip712.model';
+import {PermitRecoveryParams, SyncPermitRecoveryParams} from './model/permit-recovery.model';
 
 export class Eip2612PermitUtils {
     constructor(protected connector: ProviderConnector) {}
@@ -114,6 +116,83 @@ export class Eip2612PermitUtils {
         );
 
         return permitCallData.replace(DAI_PERMIT_SELECTOR, '0x');
+    }
+
+    async recoverPermitOwnerFromCallData(params: PermitRecoveryParams): Promise<string> {
+        const { owner } = this.connector.decodeABIParameters(
+            EIP_2612_PERMIT_INPUTS,
+            params.callData
+        );
+
+        return this.syncRecoverPermitOwnerFromCallData({
+            ...params,
+            nonce: await this.getTokenNonce(params.tokenAddress, owner),
+            isDomainWithoutVersion: await this.isDomainWithoutVersion(params.tokenAddress),
+        });
+    }
+
+    syncRecoverPermitOwnerFromCallData(params: SyncPermitRecoveryParams): string {
+        const {
+            callData, chainId, tokenAddress, tokenName, nonce,
+            isDomainWithoutVersion = false, version = undefined
+        } = params;
+        const {
+            owner, spender, value, deadline, v, r, s
+        } = this.connector.decodeABIParameters(EIP_2612_PERMIT_INPUTS, callData);
+
+        const permitParams: PermitParams = { owner, spender, value, deadline, nonce };
+        const permitData = buildPermitTypedData({
+            chainId,
+            tokenName,
+            tokenAddress,
+            params: permitParams,
+            isDomainWithoutVersion,
+            version
+        });
+
+        return recoverTypedSignature_v4({
+            data: permitData as TypedMessage<MessageTypes>,
+            sig: '0x' + r.slice(2) + s.slice(2) + (+v).toString(16)
+        });
+    }
+
+    async recoverDaiLikePermitOwnerFromCallData(params: PermitRecoveryParams): Promise<string> {
+        const { holder } = this.connector.decodeABIParameters(
+            DAI_EIP_2612_PERMIT_INPUTS,
+            params.callData
+        );
+
+        return this.syncRecoverDaiLikePermitOwnerFromCallData({
+            ...params,
+            nonce: await this.getTokenNonce(params.tokenAddress, holder),
+            isDomainWithoutVersion: await this.isDomainWithoutVersion(params.tokenAddress),
+        });
+    }
+
+    syncRecoverDaiLikePermitOwnerFromCallData(params: SyncPermitRecoveryParams): string {
+        const {
+            callData, chainId, tokenAddress, tokenName, nonce,
+            isDomainWithoutVersion = false, version = undefined
+        } = params;
+        const {
+            holder, spender, value, expiry, allowed, v, r, s
+        } = this.connector.decodeABIParameters(DAI_EIP_2612_PERMIT_INPUTS, callData);
+
+        const permitParams: DaiPermitParams = { holder, spender, value, expiry, nonce, allowed };
+        const permitData = buildPermitTypedData({
+            chainId,
+            tokenName,
+            tokenAddress,
+            params: permitParams,
+            isDomainWithoutVersion,
+            version,
+            permitModelFields: daiPermitModelFields
+        });
+
+        return recoverTypedSignature_v4({
+            data: permitData as TypedMessage<MessageTypes>,
+            sig: '0x' + r.slice(2) + s.slice(2) + (+v).toString(16)
+        });
     }
 
     getTokenNonce(

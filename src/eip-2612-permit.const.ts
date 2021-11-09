@@ -1,4 +1,4 @@
-import {AbiItem} from 'web3-utils';
+import {AbiInput, AbiItem} from 'web3-utils';
 import {EIP712Parameter} from './model/eip712.model';
 
 export const EIP_2612_PERMIT_SELECTOR = '0xd505accf';
@@ -93,6 +93,9 @@ export const EIP_2612_PERMIT_ABI: AbiItem[] = [
     },
 ];
 
+export const EIP_2612_PERMIT_INPUTS = EIP_2612_PERMIT_ABI[0].inputs as AbiInput[];
+
+
 export const DAI_EIP_2612_PERMIT_ABI: AbiItem[] = [
     {
         constant: false,
@@ -145,6 +148,8 @@ export const DAI_EIP_2612_PERMIT_ABI: AbiItem[] = [
         type: 'function',
     },
 ];
+
+export const DAI_EIP_2612_PERMIT_INPUTS = DAI_EIP_2612_PERMIT_ABI[0].inputs as AbiInput[];
 
 export const DOMAIN_TYPEHASH_ABI: AbiItem[] = [
     {

@@ -2,7 +2,7 @@ import {ProviderConnector} from './provider.connector';
 import Web3 from 'web3';
 import {EIP712TypedData} from '../model/eip712.model';
 import {AbiItem} from '../model/abi.model';
-import {AbiItem as Web3AbiItem} from 'web3-utils';
+import {AbiInput, AbiItem as Web3AbiItem} from 'web3-utils';
 import {MsgParams, signTypedData_v4} from 'eth-sig-util';
 
 export class PrivateKeyProviderConnector implements ProviderConnector {
@@ -48,5 +48,9 @@ export class PrivateKeyProviderConnector implements ProviderConnector {
 
     decodeABIParameter<T>(type: string, hex: string): T {
         return this.web3Provider.eth.abi.decodeParameter(type, hex) as T;
+    }
+
+    decodeABIParameters<T>(types: AbiInput[], hex: string): T {
+        return this.web3Provider.eth.abi.decodeParameters(types, hex) as T;
     }
 }
