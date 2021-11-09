@@ -80,6 +80,54 @@ describe('Eip2612PermitUtils', () => {
         );
     });
 
+    it('Recover owner address from permit call data', async () => {
+        const callData = await eip2612PermitUtils.buildPermitCallData(
+            {
+                ...permitParams,
+                nonce: await eip2612PermitUtils.getTokenNonce(
+                    tokenAddress,
+                    walletAddress
+                ),
+            },
+            chainId,
+            tokenName,
+            tokenAddress
+        );
+
+        const result = await eip2612PermitUtils.recoverPermitOwnerFromCallData({
+            chainId,
+            tokenName,
+            tokenAddress,
+            callData
+        });
+
+        expect(result).toBe(walletAddress);
+    });
+
+    it('Recover owner address from DAI-like permit call data', async () => {
+        const callData = await eip2612PermitUtils.buildDaiLikePermitCallData(
+            {
+                ...daiPermitParams,
+                nonce: await eip2612PermitUtils.getTokenNonce(
+                    daiLikeTokenAddress,
+                    walletAddress
+                ),
+            },
+            chainId,
+            daiLikeTokenName,
+            daiLikeTokenAddress
+        );
+
+        const result = await eip2612PermitUtils.recoverDaiLikePermitOwnerFromCallData({
+            chainId,
+            tokenName: daiLikeTokenName,
+            tokenAddress: daiLikeTokenAddress,
+            callData
+        });
+
+        expect(result).toBe(walletAddress);
+    });
+
     it('Build DAI-like token permit signature', async () => {
         const signature = await eip2612PermitUtils.buildDaiLikePermitSignature(
             daiPermitParams,
