@@ -211,4 +211,17 @@ describe('Eip2612PermitUtils', () => {
             '0x236db5742c6d63bc63a98b52141886d21552252e5038fc750bd0c6212b6f683f'
         );
     });
+
+    it('syncRecoverPermitOwnerFromCallData()', async () => {
+        const owner = eip2612PermitUtils.syncRecoverPermitOwnerFromCallData({
+            chainId: 1,
+            tokenName: '1INCH Token',
+            tokenAddress: '0x111111111117dc0aa78b770fa6a738034120c302',
+            callData: '0x000000000000000000000000fb3c7eb936caa12b5a884d612393969a557d4307000000000000000000000000119c71d3bbac22029622cbaec24854d3d32d2828ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000061b0c78c000000000000000000000000000000000000000000000000000000000000001c1b54f57a0e7cc87462db81467fae81f39c17c720392b1c13652f95738e33558d5b70fe9ca7aaf93bbd758172580f369b706e2ee5a9211dd1ce4d273c291a3b2a',
+            version: '1',
+            nonce: 3
+        });
+
+        expect(owner.toLowerCase()).toBe('0xfb3c7eb936caa12b5a884d612393969a557d4307');
+    });
 });
