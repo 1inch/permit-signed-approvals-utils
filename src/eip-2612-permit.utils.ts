@@ -202,7 +202,7 @@ export class Eip2612PermitUtils {
         return this.getTokenNonceByMethod('nonces', tokenAddress, walletAddress).catch(() => {
             /**
              * Fallback to _nonces for tokens like:
-             * https://polygonscan.com/address/0x3cb4ca3c9dc0e02d252098eebb3871ac7a43c54d#readContract
+             * https://polygonscan.com/address/0x3cb4ca3c9dc0e02d252098eebb3871ac7a43c54d
              */
             return this.getTokenNonceByMethod('_nonces', tokenAddress, walletAddress);
         });
