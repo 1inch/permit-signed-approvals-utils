@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.1](https://github.com/1inch/permit-signed-approvals-utils/compare/v1.4.0...v1.4.1) (2021-12-17)
+
+
+### Bug Fixes
+
+* fallback nonces method for some tokens ([828ed38](https://github.com/1inch/permit-signed-approvals-utils/commit/828ed38acbeecf131860f251d37d8a005bfc7d7e))
+
 ## [1.4.0](https://github.com/1inch/permit-signed-approvals-utils/compare/v1.3.0...v1.4.0) (2021-11-09)
 
 
