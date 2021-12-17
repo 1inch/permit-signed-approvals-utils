@@ -199,15 +199,12 @@ export class Eip2612PermitUtils {
         tokenAddress: string,
         walletAddress: string
     ): Promise<number> {
-        const callData = this.connector.contractEncodeABI(
-            ERC_20_NONCES_ABI,
-            tokenAddress,
-            'nonces',
-            [walletAddress]
-        );
-
-        return this.connector.ethCall(tokenAddress, callData).then((res) => {
-            return Number(res);
+        return this.getTokenNonceByMethod('nonces', tokenAddress, walletAddress).catch(() => {
+            /**
+             * Fallback to _nonces for tokens like:
+             * https://polygonscan.com/address/0x3cb4ca3c9dc0e02d252098eebb3871ac7a43c54d#readContract
+             */
+            return this.getTokenNonceByMethod('_nonces', tokenAddress, walletAddress);
         });
     }
 
@@ -259,5 +256,22 @@ export class Eip2612PermitUtils {
         const domainTypeHash = await this.getDomainTypeHash(tokenAddress);
 
         return !!domainTypeHash && DOMAINS_WITHOUT_VERSION.includes(domainTypeHash.toLowerCase());
+    }
+
+    private getTokenNonceByMethod(
+        methodName: 'nonces' | '_nonces',
+        tokenAddress: string,
+        walletAddress: string
+    ): Promise<number> {
+        const callData = this.connector.contractEncodeABI(
+            ERC_20_NONCES_ABI,
+            tokenAddress,
+            methodName,
+            [walletAddress]
+        );
+
+        return this.connector.ethCall(tokenAddress, callData).then((res) => {
+            return Number(res);
+        });
     }
 }

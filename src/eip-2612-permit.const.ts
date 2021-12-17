@@ -50,6 +50,25 @@ export const ERC_20_NONCES_ABI: AbiItem[] = [
         stateMutability: 'view',
         type: 'function',
     },
+    {
+        constant: true,
+        inputs: [
+            {
+                name: '',
+                type: 'address',
+            },
+        ],
+        name: '_nonces',
+        outputs: [
+            {
+                name: '',
+                type: 'uint256',
+            },
+        ],
+        payable: false,
+        stateMutability: 'view',
+        type: 'function',
+    },
 ];
 
 export const EIP_2612_PERMIT_ABI: AbiItem[] = [
