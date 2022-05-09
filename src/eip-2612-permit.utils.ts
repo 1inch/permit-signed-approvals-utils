@@ -271,6 +271,10 @@ export class Eip2612PermitUtils {
         );
 
         return this.connector.ethCall(tokenAddress, callData).then((res) => {
+            if (res === '0x' || Number.isNaN(Number(res))) {
+                return Promise.reject(new Error('nonce is NaN'));
+            }
+
             return Number(res);
         });
     }
