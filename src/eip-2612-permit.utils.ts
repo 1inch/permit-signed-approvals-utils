@@ -1,4 +1,9 @@
-import {TypedDataUtils, recoverTypedSignature_v4, TypedMessage} from 'eth-sig-util';
+import {
+    TypedDataUtils,
+    recoverTypedSignature,
+    TypedMessage,
+    SignTypedDataVersion
+} from '@metamask/eth-sig-util';
 import {ProviderConnector} from './connector/provider.connector';
 import {
     DAI_EIP_2612_PERMIT_ABI, DAI_EIP_2612_PERMIT_INPUTS, DAI_PERMIT_SELECTOR,
@@ -41,7 +46,7 @@ export class Eip2612PermitUtils {
             permitData.primaryType,
             permitData.message,
             permitData.types,
-            true
+            SignTypedDataVersion.V4
         ).toString('hex');
 
         return this.connector.signTypedData(permitParams.owner, permitData, dataHash);
@@ -88,7 +93,7 @@ export class Eip2612PermitUtils {
             permitData.primaryType,
             permitData.message,
             permitData.types,
-            true
+            SignTypedDataVersion.V4
         ).toString('hex');
 
         return this.connector.signTypedData(params.holder, permitData, dataHash);
@@ -150,9 +155,10 @@ export class Eip2612PermitUtils {
             version
         });
 
-        return recoverTypedSignature_v4({
+        return recoverTypedSignature({
             data: permitData as TypedMessage<MessageTypes>,
-            sig: '0x' + r.slice(2) + s.slice(2) + (+v).toString(16)
+            signature: '0x' + r.slice(2) + s.slice(2) + (+v).toString(16),
+            version: SignTypedDataVersion.V4
         });
     }
 
@@ -189,9 +195,10 @@ export class Eip2612PermitUtils {
             permitModelFields: daiPermitModelFields
         });
 
-        return recoverTypedSignature_v4({
+        return recoverTypedSignature({
             data: permitData as TypedMessage<MessageTypes>,
-            sig: '0x' + r.slice(2) + s.slice(2) + (+v).toString(16)
+            signature: '0x' + r.slice(2) + s.slice(2) + (+v).toString(16),
+            version: SignTypedDataVersion.V4,
         });
     }
 
