@@ -7,6 +7,7 @@ export interface PermitTypedDataParamsModel {
     tokenAddress: string;
     params: EIP712Object;
     isDomainWithoutVersion?: boolean;
+    isSaltInsteadOfChainId?: boolean;
     version?: string;
     permitModelFields?: EIP712Parameter[];
 }

@@ -6,29 +6,44 @@ import {
 } from '@metamask/eth-sig-util';
 import {ProviderConnector} from './connector/provider.connector';
 import {
-    DAI_EIP_2612_PERMIT_ABI, DAI_EIP_2612_PERMIT_INPUTS, DAI_PERMIT_SELECTOR,
+    DAI_EIP_2612_PERMIT_ABI,
+    DAI_EIP_2612_PERMIT_INPUTS,
+    DAI_PERMIT_SELECTOR,
     daiPermitModelFields,
     DOMAIN_SEPARATOR_ABI,
     DOMAIN_TYPEHASH_ABI,
+    DOMAIN_WITH_SALT_ADN_WITHOUT_CHAIN_ID,
     DOMAINS_WITHOUT_VERSION,
-    EIP_2612_PERMIT_ABI, EIP_2612_PERMIT_INPUTS,
+    EIP_2612_PERMIT_ABI,
+    EIP_2612_PERMIT_INPUTS,
     EIP_2612_PERMIT_SELECTOR,
-    ERC_20_NONCES_ABI, PERMIT_TYPEHASH_ABI,
+    ERC_20_NONCES_ABI,
+    PERMIT_TYPEHASH_ABI
 } from './eip-2612-permit.const';
 import {
     buildPermitTypedData, getDaiPermitContractCallParams,
     getPermitContractCallParams,
 } from './eip-2612-permit.helper';
 import {ChainId} from './model/chain.model';
-import {DaiPermitParams, PermitParams} from './model/permit.model';
 import {MessageTypes} from './model/eip712.model';
 import {PermitRecoveryParams, SyncPermitRecoveryParams} from './model/permit-recovery.model';
+import {DaiPermitParams, PermitParams} from './model/permit.model';
+
+
+interface Eip2612PermitUtilsOptions {
+    enabledCheckSalt: boolean;
+}
+
 
 export class Eip2612PermitUtils {
-    constructor(protected connector: ProviderConnector) {}
+    private readonly domainTypeHashStorage: Map<string, string> = new Map();
 
-    async buildPermitSignature(
-        permitParams: PermitParams,
+    constructor(
+        protected connector: ProviderConnector,
+        protected options?: Eip2612PermitUtilsOptions
+    ) {}
+
+    async buildPermitSignature(permitParams: PermitParams,
         chainId: ChainId,
         tokenName: string,
         tokenAddress: string,
@@ -39,6 +54,7 @@ export class Eip2612PermitUtils {
             tokenName,
             tokenAddress,
             params: permitParams,
+            isSaltInsteadOfChainId: await this.isSaltInsteadOfChainId(tokenAddress),
             isDomainWithoutVersion: await this.isDomainWithoutVersion(tokenAddress),
             version
         });
@@ -85,6 +101,7 @@ export class Eip2612PermitUtils {
     ): Promise<string> {
         const permitData = buildPermitTypedData({
             chainId, tokenName, tokenAddress, params,
+            isSaltInsteadOfChainId: await this.isSaltInsteadOfChainId(tokenAddress),
             isDomainWithoutVersion: await this.isDomainWithoutVersion(tokenAddress),
             version,
             permitModelFields: daiPermitModelFields
@@ -132,14 +149,17 @@ export class Eip2612PermitUtils {
         return this.syncRecoverPermitOwnerFromCallData({
             ...params,
             nonce: await this.getTokenNonce(params.tokenAddress, owner),
-            isDomainWithoutVersion: await this.isDomainWithoutVersion(params.tokenAddress),
+            isSaltInsteadOfChainId: await this.isSaltInsteadOfChainId(params.tokenAddress),
+            isDomainWithoutVersion: await this.isDomainWithoutVersion(params.tokenAddress)
         });
     }
 
     syncRecoverPermitOwnerFromCallData(params: SyncPermitRecoveryParams): string {
         const {
             callData, chainId, tokenAddress, tokenName, nonce,
-            isDomainWithoutVersion = false, version = undefined
+            isDomainWithoutVersion = false,
+            isSaltInsteadOfChainId = false,
+            version = undefined
         } = params;
         const {
             owner, spender, value, deadline, v, r, s
@@ -147,11 +167,10 @@ export class Eip2612PermitUtils {
 
         const permitParams: PermitParams = { owner, spender, value, deadline, nonce };
         const permitData = buildPermitTypedData({
-            chainId,
-            tokenName,
-            tokenAddress,
+            chainId, tokenName, tokenAddress,
             params: permitParams,
             isDomainWithoutVersion,
+            isSaltInsteadOfChainId,
             version
         });
 
@@ -171,14 +190,17 @@ export class Eip2612PermitUtils {
         return this.syncRecoverDaiLikePermitOwnerFromCallData({
             ...params,
             nonce: await this.getTokenNonce(params.tokenAddress, holder),
-            isDomainWithoutVersion: await this.isDomainWithoutVersion(params.tokenAddress),
+            isSaltInsteadOfChainId: await this.isSaltInsteadOfChainId(params.tokenAddress),
+            isDomainWithoutVersion: await this.isDomainWithoutVersion(params.tokenAddress)
         });
     }
 
     syncRecoverDaiLikePermitOwnerFromCallData(params: SyncPermitRecoveryParams): string {
         const {
             callData, chainId, tokenAddress, tokenName, nonce,
-            isDomainWithoutVersion = false, version = undefined
+            isDomainWithoutVersion = false,
+            isSaltInsteadOfChainId = false,
+            version = undefined
         } = params;
         const {
             holder, spender, value, expiry, allowed, v, r, s
@@ -186,12 +208,10 @@ export class Eip2612PermitUtils {
 
         const permitParams: DaiPermitParams = { holder, spender, value, expiry, nonce, allowed };
         const permitData = buildPermitTypedData({
-            chainId,
-            tokenName,
-            tokenAddress,
+            chainId, tokenName, tokenAddress, version,
             params: permitParams,
             isDomainWithoutVersion,
-            version,
+            isSaltInsteadOfChainId,
             permitModelFields: daiPermitModelFields
         });
 
@@ -216,8 +236,10 @@ export class Eip2612PermitUtils {
     }
 
     async getDomainTypeHash(tokenAddress: string): Promise<string | null> {
+        if (this.domainTypeHashStorage.has(tokenAddress))
+            return Promise.resolve(this.domainTypeHashStorage.get(tokenAddress) as string);
         try {
-            return await this.connector.ethCall(
+            const domainTypeHash = await this.connector.ethCall(
                 tokenAddress,
                 this.connector.contractEncodeABI(
                     DOMAIN_TYPEHASH_ABI,
@@ -226,6 +248,8 @@ export class Eip2612PermitUtils {
                     []
                 )
             );
+            this.domainTypeHashStorage.set(tokenAddress, domainTypeHash);
+            return domainTypeHash;
         } catch (e) {
             return Promise.resolve(null);
         }
@@ -265,8 +289,17 @@ export class Eip2612PermitUtils {
         return !!domainTypeHash && DOMAINS_WITHOUT_VERSION.includes(domainTypeHash.toLowerCase());
     }
 
-    private getTokenNonceByMethod(
-        methodName: 'nonces' | '_nonces',
+    async isSaltInsteadOfChainId(tokenAddress: string): Promise<boolean> {
+        if (this.options?.enabledCheckSalt) {
+            const domainTypeHash = await this.getDomainTypeHash(tokenAddress);
+
+            return !!domainTypeHash &&
+                DOMAIN_WITH_SALT_ADN_WITHOUT_CHAIN_ID === domainTypeHash.toLowerCase();
+        }
+        return Promise.resolve(false);
+    }
+
+    private getTokenNonceByMethod(methodName: 'nonces' | '_nonces',
         tokenAddress: string,
         walletAddress: string
     ): Promise<number> {

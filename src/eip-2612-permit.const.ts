@@ -11,7 +11,12 @@ export const DOMAINS_WITHOUT_VERSION = [
     '0x8cad95687ba82c2ce50e74f7b754645e5117c3a5bec8151c0726d5857980a866',
 ];
 
+export const DOMAIN_WITH_SALT_ADN_WITHOUT_CHAIN_ID =
+    // EIP712Domain(string name,string version,address verifyingContract,bytes32 salt)
+    '0x36c25de3e541d5d970f66e4210d728721220fff5c077cc6cd008b3a0c62adab7'
+
 export const DAI_LIKE_PERMIT_TYPEHASH =
+    // Permit(address holder,address spender,uint256 nonce,uint256 expiry,bool allowed)
     '0xea2aa0a1be11a07ed86d755c93467f4f82362b452371d1ba94d1715123511acb';
 
 export const eip2612PermitModelFields: EIP712Parameter[] = [

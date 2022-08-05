@@ -9,4 +9,5 @@ export interface PermitRecoveryParams {
 export interface SyncPermitRecoveryParams extends PermitRecoveryParams {
     nonce: number;
     isDomainWithoutVersion?: boolean;
+    isSaltInsteadOfChainId?: boolean;
 }
