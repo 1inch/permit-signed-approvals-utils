@@ -31,6 +31,49 @@ describe('eip-2612 permit helpers', () => {
         expect(data).toMatchSnapshot();
     });
 
+    it('buildPermitTypedData({isDomainWithoutVersion: true})', () => {
+        const data = buildPermitTypedData({
+            chainId,
+            tokenName,
+            tokenAddress,
+            params: permitParams,
+            isDomainWithoutVersion: true,
+        });
+
+        expect(data).toMatchSnapshot();
+    });
+
+    it('buildPermitTypedData({isSaltInsteadOfChainId: true})', () => {
+        const tokenAddress = '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174';
+        const tokenName = 'USD Coin (PoS)';
+        const chainId = 137;
+        const data = buildPermitTypedData({
+            chainId,
+            tokenName,
+            tokenAddress,
+            params: permitParams,
+            isSaltInsteadOfChainId: true,
+        });
+
+        expect(data).toMatchSnapshot();
+    });
+
+    it('buildPermitTypedData({isSaltInsteadOfChainId: true, isDomainWithoutVersion: true})', () => {
+        const tokenAddress = '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174';
+        const tokenName = 'USD Coin (PoS)';
+        const chainId = 137;
+        const data = buildPermitTypedData({
+            chainId,
+            tokenName,
+            tokenAddress,
+            params: permitParams,
+            isDomainWithoutVersion: true,
+            isSaltInsteadOfChainId: true,
+        });
+
+        expect(data).toMatchSnapshot();
+    });
+
     it('fromRpcSig()', () => {
         const signature =
             '0x' +
