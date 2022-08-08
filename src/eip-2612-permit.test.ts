@@ -268,8 +268,8 @@ describe('Eip2612PermitUtils', () => {
 
             expect(signature).toBe(
                 '0x' +
-                'afc4fd07d5246eb7a3f13eb57c38108d8f06bb50cbb5d2687056b05c657bc8a4' +
-                '3e048987fd9a1b872b7351734f174f6f13ecc6d2ff9c932fcd4c8ac36b069917' +
+                'beb4f4af4426615fb564382d170f708045e03690246b2d1e248359eed9450f0a' +
+                '7fd5af843025cea84ef8c8482d8214e7c886750b258d736f190b1ef5fc1358c7' +
                 '1c'
             );
         });
