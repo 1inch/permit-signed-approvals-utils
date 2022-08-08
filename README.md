@@ -1,6 +1,6 @@
 <div align="center">
-    <img src="https://github.com/1inch/permit-signed-approvals-utils/blob/master/.github/1inch_github_w.svg#gh-light-mode-only">
-    <img src="https://github.com/1inch/permit-signed-approvals-utils/blob/master/.github/1inch_github_b.svg#gh-dark-mode-only">
+    <img src="https://github.com/1inch/permit-signed-approvals-utils/blob/master/.github/workflows/1inch_github_w.svg#gh-light-mode-only">
+    <img src="https://github.com/1inch/permit-signed-approvals-utils/blob/master/.github/workflows/1inch_github_b.svg#gh-dark-mode-only">
 </div>
 
 # Utils library for EIP-2612: permit based on EIP-712 signed approvals
@@ -15,7 +15,7 @@ This is the package of utilities for building signature and call data of EIP-261
 
 | Statements                                                                     | Branches                                                                    | Functions                                                                     | Lines                                                                |
 | ------------------------------------------------------------------------------ | --------------------------------------------------------------------------- | ----------------------------------------------------------------------------- | -------------------------------------------------------------------- |
-| ![Statements](https://img.shields.io/badge/statements-97.61%25-brightgreen.svg) | ![Branches](https://img.shields.io/badge/branches-93.75%25-brightgreen.svg) | ![Functions](https://img.shields.io/badge/functions-94.29%25-brightgreen.svg) | ![Lines](https://img.shields.io/badge/lines-97.61%25-brightgreen.svg) |
+| ![Statements](https://img.shields.io/badge/statements-97.62%25-brightgreen.svg) | ![Branches](https://img.shields.io/badge/branches-93.85%25-brightgreen.svg) | ![Functions](https://img.shields.io/badge/functions-94.29%25-brightgreen.svg) | ![Lines](https://img.shields.io/badge/lines-97.62%25-brightgreen.svg) |
 
 ## Installation
 
