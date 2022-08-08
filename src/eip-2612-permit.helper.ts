@@ -104,11 +104,15 @@ export function getDaiPermitContractCallParams(
     ];
 }
 
+export function buildTokenIdentifier(tokenAddress: string, chainId: number): string {
+    return `${tokenAddress}:${chainId}`.toLowerCase();
+}
+
 function getSalt(data: PermitTypedDataParamsModel): string {
     const web3 = new Web3();
     const { chainId, tokenAddress } = data;
-    const key = `${tokenAddress}:${chainId}`;
-    if (TOKEN_ADDRESSES_WITH_SALT.includes(key)) {
+    const identifier = buildTokenIdentifier(tokenAddress, chainId);
+    if (TOKEN_ADDRESSES_WITH_SALT.includes(identifier)) {
         return web3.eth.abi.encodeParameter('uint256', `${chainId}`)
     }
     console.warn(

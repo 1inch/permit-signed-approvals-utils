@@ -21,8 +21,9 @@ import {
     TOKEN_ADDRESSES_WITH_SALT
 } from './eip-2612-permit.const';
 import {
-    buildPermitTypedData, getDaiPermitContractCallParams,
-    getPermitContractCallParams,
+    buildPermitTypedData, buildTokenIdentifier,
+    getDaiPermitContractCallParams,
+    getPermitContractCallParams
 } from './eip-2612-permit.helper';
 import {ChainId} from './model/chain.model';
 import {MessageTypes} from './model/eip712.model';
@@ -293,8 +294,8 @@ export class Eip2612PermitUtils {
 
     isSaltInsteadOfChainId(tokenAddress: string, chainId: number): boolean {
         if (this.options?.enabledCheckSalt) {
-            const key = `${tokenAddress}:${chainId}`
-            return TOKEN_ADDRESSES_WITH_SALT.includes(key)
+            const identifier = buildTokenIdentifier(tokenAddress, chainId);
+            return TOKEN_ADDRESSES_WITH_SALT.includes(identifier)
         }
         return false
     }

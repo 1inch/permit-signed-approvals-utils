@@ -20,7 +20,7 @@ export const DAI_LIKE_PERMIT_TYPEHASH =
     '0xea2aa0a1be11a07ed86d755c93467f4f82362b452371d1ba94d1715123511acb';
 
 export const TOKEN_ADDRESSES_WITH_SALT = [
-    // '${address}:${chainId}'
+    // '${address}:${chainId}.toLowerCase()'
     '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174:137', // USDC Proxy Polygon
     '0xc2132D05D31c914a87C6611C10748AEb04B58e8F:137', // USDT Proxy Polygon
     '0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063:137', // DAI Proxy Polygon
@@ -35,7 +35,7 @@ export const TOKEN_ADDRESSES_WITH_SALT = [
     '0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6:137', // WBTC Proxy Polygon
     '0x385Eeac5cB85A38A9a07A70c73e0a3271CfB54A7:137', // GHST Proxy Polygon
     '0x361A5a4993493cE00f61C32d4EcCA5512b82CE90:137', // SDT Proxy Polygon
-]
+].map(k => k.toLowerCase())
 
 export const eip2612PermitModelFields: EIP712Parameter[] = [
     { name: 'owner', type: 'address' },
