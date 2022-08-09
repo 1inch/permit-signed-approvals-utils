@@ -12,17 +12,18 @@ import {
     daiPermitModelFields,
     DOMAIN_SEPARATOR_ABI,
     DOMAIN_TYPEHASH_ABI,
-    DOMAIN_WITH_SALT_ADN_WITHOUT_CHAIN_ID,
     DOMAINS_WITHOUT_VERSION,
     EIP_2612_PERMIT_ABI,
     EIP_2612_PERMIT_INPUTS,
     EIP_2612_PERMIT_SELECTOR,
     ERC_20_NONCES_ABI,
-    PERMIT_TYPEHASH_ABI
+    PERMIT_TYPEHASH_ABI,
+    TOKEN_ADDRESSES_WITH_SALT
 } from './eip-2612-permit.const';
 import {
-    buildPermitTypedData, getDaiPermitContractCallParams,
-    getPermitContractCallParams,
+    buildPermitTypedData, buildTokenIdentifier,
+    getDaiPermitContractCallParams,
+    getPermitContractCallParams
 } from './eip-2612-permit.helper';
 import {ChainId} from './model/chain.model';
 import {MessageTypes} from './model/eip712.model';
@@ -34,7 +35,6 @@ interface Eip2612PermitUtilsOptions {
     enabledCheckSalt: boolean;
 }
 
-
 export class Eip2612PermitUtils {
     private readonly domainTypeHashStorage: Map<string, string> = new Map();
 
@@ -43,7 +43,8 @@ export class Eip2612PermitUtils {
         protected options?: Eip2612PermitUtilsOptions
     ) {}
 
-    async buildPermitSignature(permitParams: PermitParams,
+    async buildPermitSignature(
+        permitParams: PermitParams,
         chainId: ChainId,
         tokenName: string,
         tokenAddress: string,
@@ -54,7 +55,7 @@ export class Eip2612PermitUtils {
             tokenName,
             tokenAddress,
             params: permitParams,
-            isSaltInsteadOfChainId: await this.isSaltInsteadOfChainId(tokenAddress),
+            isSaltInsteadOfChainId: this.isSaltInsteadOfChainId(tokenAddress, chainId),
             isDomainWithoutVersion: await this.isDomainWithoutVersion(tokenAddress),
             version
         });
@@ -101,7 +102,7 @@ export class Eip2612PermitUtils {
     ): Promise<string> {
         const permitData = buildPermitTypedData({
             chainId, tokenName, tokenAddress, params,
-            isSaltInsteadOfChainId: await this.isSaltInsteadOfChainId(tokenAddress),
+            isSaltInsteadOfChainId: this.isSaltInsteadOfChainId(tokenAddress, chainId),
             isDomainWithoutVersion: await this.isDomainWithoutVersion(tokenAddress),
             version,
             permitModelFields: daiPermitModelFields
@@ -145,12 +146,13 @@ export class Eip2612PermitUtils {
             EIP_2612_PERMIT_INPUTS,
             params.callData
         );
+        const { tokenAddress, chainId } = params;
 
         return this.syncRecoverPermitOwnerFromCallData({
             ...params,
-            nonce: await this.getTokenNonce(params.tokenAddress, owner),
-            isSaltInsteadOfChainId: await this.isSaltInsteadOfChainId(params.tokenAddress),
-            isDomainWithoutVersion: await this.isDomainWithoutVersion(params.tokenAddress)
+            nonce: await this.getTokenNonce(tokenAddress, owner),
+            isSaltInsteadOfChainId: this.isSaltInsteadOfChainId(tokenAddress, chainId),
+            isDomainWithoutVersion: await this.isDomainWithoutVersion(tokenAddress)
         });
     }
 
@@ -186,12 +188,13 @@ export class Eip2612PermitUtils {
             DAI_EIP_2612_PERMIT_INPUTS,
             params.callData
         );
+        const { tokenAddress, chainId } = params;
 
         return this.syncRecoverDaiLikePermitOwnerFromCallData({
             ...params,
-            nonce: await this.getTokenNonce(params.tokenAddress, holder),
-            isSaltInsteadOfChainId: await this.isSaltInsteadOfChainId(params.tokenAddress),
-            isDomainWithoutVersion: await this.isDomainWithoutVersion(params.tokenAddress)
+            nonce: await this.getTokenNonce(tokenAddress, holder),
+            isSaltInsteadOfChainId: this.isSaltInsteadOfChainId(tokenAddress, chainId),
+            isDomainWithoutVersion: await this.isDomainWithoutVersion(tokenAddress)
         });
     }
 
@@ -289,14 +292,12 @@ export class Eip2612PermitUtils {
         return !!domainTypeHash && DOMAINS_WITHOUT_VERSION.includes(domainTypeHash.toLowerCase());
     }
 
-    async isSaltInsteadOfChainId(tokenAddress: string): Promise<boolean> {
+    isSaltInsteadOfChainId(tokenAddress: string, chainId: number): boolean {
         if (this.options?.enabledCheckSalt) {
-            const domainTypeHash = await this.getDomainTypeHash(tokenAddress);
-
-            return !!domainTypeHash &&
-                DOMAIN_WITH_SALT_ADN_WITHOUT_CHAIN_ID === domainTypeHash.toLowerCase();
+            const identifier = buildTokenIdentifier(tokenAddress, chainId);
+            return TOKEN_ADDRESSES_WITH_SALT.includes(identifier)
         }
-        return Promise.resolve(false);
+        return false
     }
 
     private getTokenNonceByMethod(methodName: 'nonces' | '_nonces',
