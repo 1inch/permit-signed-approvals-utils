@@ -19,6 +19,12 @@ export const DAI_LIKE_PERMIT_TYPEHASH =
     // Permit(address holder,address spender,uint256 nonce,uint256 expiry,bool allowed)
     '0xea2aa0a1be11a07ed86d755c93467f4f82362b452371d1ba94d1715123511acb';
 
+export const TOKEN_ADDRESSES_WITH_SALT = [
+    // '${address}:${chainId}.toLowerCase()'
+    '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174:137', // USDC Proxy Polygon
+    '0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063:137', // DAI Proxy Polygon
+].map(k => k.toLowerCase())
+
 export const eip2612PermitModelFields: EIP712Parameter[] = [
     { name: 'owner', type: 'address' },
     { name: 'spender', type: 'address' },
