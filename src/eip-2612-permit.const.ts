@@ -21,9 +21,9 @@ export const DAI_LIKE_PERMIT_TYPEHASH =
 
 export const TOKEN_ADDRESSES_WITH_SALT = [
     // '${address}:${chainId}.toLowerCase()'
-    '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174:137', // USDC Proxy Polygon
-    '0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063:137', // DAI Proxy Polygon
-].map(k => k.toLowerCase())
+    '0x2791bca1f2de4661ed88a30c99a7a9449aa84174:137', // USDC Proxy Polygon
+    '0x8f3cf7ad23cd3cadbd9735aff958023239c6a063:137', // DAI Proxy Polygon
+]
 
 export const eip2612PermitModelFields: EIP712Parameter[] = [
     { name: 'owner', type: 'address' },
@@ -70,6 +70,25 @@ export const ERC_20_NONCES_ABI: AbiItem[] = [
             },
         ],
         name: '_nonces',
+        outputs: [
+            {
+                name: '',
+                type: 'uint256',
+            },
+        ],
+        payable: false,
+        stateMutability: 'view',
+        type: 'function',
+    },
+    {
+        constant: true,
+        inputs: [
+            {
+                name: '',
+                type: 'address',
+            },
+        ],
+        name: 'nonce',
         outputs: [
             {
                 name: '',

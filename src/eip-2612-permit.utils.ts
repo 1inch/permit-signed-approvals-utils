@@ -1,10 +1,7 @@
 import {
-    TypedDataUtils,
-    recoverTypedSignature,
-    TypedMessage,
-    SignTypedDataVersion
+    recoverTypedSignature, SignTypedDataVersion, TypedDataUtils, TypedMessage
 } from '@metamask/eth-sig-util';
-import {ProviderConnector} from './connector/provider.connector';
+import { ProviderConnector } from './connector/provider.connector';
 import {
     DAI_EIP_2612_PERMIT_ABI,
     DAI_EIP_2612_PERMIT_INPUTS,
@@ -21,19 +18,21 @@ import {
     TOKEN_ADDRESSES_WITH_SALT
 } from './eip-2612-permit.const';
 import {
-    buildPermitTypedData, buildTokenIdentifier,
+    buildPermitTypedData,
+    buildTokenIdentifier,
     getDaiPermitContractCallParams,
     getPermitContractCallParams
 } from './eip-2612-permit.helper';
-import {ChainId} from './model/chain.model';
-import {MessageTypes} from './model/eip712.model';
-import {PermitRecoveryParams, SyncPermitRecoveryParams} from './model/permit-recovery.model';
-import {DaiPermitParams, PermitParams} from './model/permit.model';
+import { ChainId } from './model/chain.model';
+import { MessageTypes } from './model/eip712.model';
+import { PermitRecoveryParams, SyncPermitRecoveryParams } from './model/permit-recovery.model';
+import { DaiPermitParams, PermitParams } from './model/permit.model';
 
 
 interface Eip2612PermitUtilsOptions {
     enabledCheckSalt: boolean;
 }
+
 
 export class Eip2612PermitUtils {
     private readonly domainTypeHashStorage: Map<string, string> = new Map();
@@ -229,13 +228,7 @@ export class Eip2612PermitUtils {
         tokenAddress: string,
         walletAddress: string
     ): Promise<number> {
-        return this.getTokenNonceByMethod('nonces', tokenAddress, walletAddress).catch(() => {
-            /**
-             * Fallback to _nonces for tokens like:
-             * https://polygonscan.com/address/0x3cb4ca3c9dc0e02d252098eebb3871ac7a43c54d
-             */
-            return this.getTokenNonceByMethod('_nonces', tokenAddress, walletAddress);
-        });
+        return this.getTokenNonceByMethod(tokenAddress, walletAddress);
     }
 
     async getDomainTypeHash(tokenAddress: string): Promise<string | null> {
@@ -295,28 +288,38 @@ export class Eip2612PermitUtils {
     isSaltInsteadOfChainId(tokenAddress: string, chainId: number): boolean {
         if (this.options?.enabledCheckSalt) {
             const identifier = buildTokenIdentifier(tokenAddress, chainId);
-            return TOKEN_ADDRESSES_WITH_SALT.includes(identifier)
+            return TOKEN_ADDRESSES_WITH_SALT.includes(identifier);
         }
-        return false
+        return false;
     }
 
-    private getTokenNonceByMethod(methodName: 'nonces' | '_nonces',
+    // eslint-disable-next-line max-lines-per-function
+    private getTokenNonceByMethod(
         tokenAddress: string,
-        walletAddress: string
+        walletAddress: string,
+        nonceMethodNameIndex = 0,
     ): Promise<number> {
-        const callData = this.connector.contractEncodeABI(
-            ERC_20_NONCES_ABI,
+        const methodName = ERC_20_NONCES_ABI[nonceMethodNameIndex]?.name;
+        if (!methodName) return Promise.reject('nonce not supported')
+        const callData = this.connector.contractEncodeABI(ERC_20_NONCES_ABI,
             tokenAddress,
             methodName,
-            [walletAddress]
+            [ walletAddress ]
         );
 
-        return this.connector.ethCall(tokenAddress, callData).then((res) => {
-            if (res === '0x' || Number.isNaN(Number(res))) {
-                return Promise.reject(new Error('nonce is NaN'));
-            }
+        return this.connector.ethCall(tokenAddress, callData)
+            .catch(() => this.getTokenNonceByMethod(
+                tokenAddress,
+                walletAddress,
+                nonceMethodNameIndex + 1,
 
-            return Number(res);
-        });
+            ))
+            .then((res) => {
+                if (res === '0x' || Number.isNaN(Number(res))) {
+                    return Promise.reject(new Error('nonce is NaN'));
+                }
+
+                return Number(res);
+            });
     }
 }
