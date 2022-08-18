@@ -5,22 +5,30 @@ export const EIP_2612_PERMIT_SELECTOR = '0xd505accf';
 export const DAI_PERMIT_SELECTOR = '0x8fcbaf0c';
 
 export const DOMAINS_WITHOUT_VERSION = [
-    // 'EIP712Domain(string name,uint chainId,address verifyingContract)'
+    /** @signature 'EIP712Domain(string name,uint chainId,address verifyingContract)' */
     '0x797cfab58fcb15f590eb8e4252d5c228ff88f94f907e119e80c4393a946e8f35',
-    // 'EIP712Domain(string name,uint256 chainId,address verifyingContract)'
+    /** @signature 'EIP712Domain(string name,uint256 chainId,address verifyingContract)' */
     '0x8cad95687ba82c2ce50e74f7b754645e5117c3a5bec8151c0726d5857980a866',
 ];
 
+/**
+ * @signature EIP712Domain(string name,string version,address verifyingContract,bytes32 salt)
+ * */
 export const DOMAIN_WITH_SALT_ADN_WITHOUT_CHAIN_ID =
-    // EIP712Domain(string name,string version,address verifyingContract,bytes32 salt)
     '0x36c25de3e541d5d970f66e4210d728721220fff5c077cc6cd008b3a0c62adab7'
 
+
+/**
+ * @signature Permit(address holder,address spender,uint256 nonce,uint256 expiry,bool allowed)
+ * */
 export const DAI_LIKE_PERMIT_TYPEHASH =
-    // Permit(address holder,address spender,uint256 nonce,uint256 expiry,bool allowed)
     '0xea2aa0a1be11a07ed86d755c93467f4f82362b452371d1ba94d1715123511acb';
 
+/**
+ * @example `${tokenAddress}:${chainId}.toLowerCase()`
+ * @warning Only toLowerCase string
+ * */
 export const TOKEN_ADDRESSES_WITH_SALT = [
-    // '${address}:${chainId}.toLowerCase()'
     '0x2791bca1f2de4661ed88a30c99a7a9449aa84174:137', // USDC Proxy Polygon
     '0x8f3cf7ad23cd3cadbd9735aff958023239c6a063:137', // DAI Proxy Polygon
 ]
