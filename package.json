@@ -1,6 +1,6 @@
 {
     "name": "@1inch/permit-signed-approvals-utils",
-    "version": "1.4.6",
+    "version": "1.4.7",
     "description": "Utils library for EIP-2612: permit – 712-signed approvals",
     "main": "index.js",
     "scripts": {
