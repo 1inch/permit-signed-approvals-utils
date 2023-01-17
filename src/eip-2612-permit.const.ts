@@ -278,3 +278,20 @@ export const DOMAIN_SEPARATOR_ABI: AbiItem[] = [
         type: 'function',
     },
 ];
+
+export const VERSIONS_ABI: AbiItem[] = [
+    {
+        constant: true,
+        inputs: [],
+        name: 'version',
+        outputs: [
+            {
+                name: '',
+                type: 'string',
+            },
+        ],
+        payable: false,
+        stateMutability: 'view',
+        type: 'function',
+    },
+]

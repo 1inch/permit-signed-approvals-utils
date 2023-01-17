@@ -15,7 +15,7 @@ This is the package of utilities for building signature and call data of EIP-261
 
 | Statements                                                                     | Branches                                                                    | Functions                                                                     | Lines                                                                |
 | ------------------------------------------------------------------------------ | --------------------------------------------------------------------------- | ----------------------------------------------------------------------------- | -------------------------------------------------------------------- |
-| ![Statements](https://img.shields.io/badge/statements-98.46%25-brightgreen.svg) | ![Branches](https://img.shields.io/badge/branches-91.04%25-brightgreen.svg) | ![Functions](https://img.shields.io/badge/functions-94.44%25-brightgreen.svg) | ![Lines](https://img.shields.io/badge/lines-98.46%25-brightgreen.svg) |
+| ![Statements](https://img.shields.io/badge/statements-98.54%25-brightgreen.svg) | ![Branches](https://img.shields.io/badge/branches-89.47%25-yellow.svg) | ![Functions](https://img.shields.io/badge/functions-94.74%25-brightgreen.svg) | ![Lines](https://img.shields.io/badge/lines-98.54%25-brightgreen.svg) |
 
 ## Installation
 

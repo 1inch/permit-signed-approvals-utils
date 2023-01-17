@@ -66,7 +66,8 @@ describe('Eip2612PermitUtils', () => {
                 },
                 chainId,
                 tokenName,
-                tokenAddress
+                tokenAddress,
+                await eip2612PermitUtils.getTokenVersion(tokenAddress),
             );
 
             expect(callData).toBe(
