@@ -15,7 +15,7 @@ import {
     EIP_2612_PERMIT_SELECTOR,
     ERC_20_NONCES_ABI,
     PERMIT_TYPEHASH_ABI,
-    TOKEN_ADDRESSES_WITH_SALT
+    TOKEN_ADDRESSES_WITH_SALT, VERSIONS_ABI
 } from './eip-2612-permit.const';
 import {
     buildPermitTypedData,
@@ -231,6 +231,12 @@ export class Eip2612PermitUtils {
         return this.getTokenNonceByMethod(tokenAddress, walletAddress);
     }
 
+    getTokenVersion(
+        tokenAddress: string,
+    ): Promise<string> {
+        return this.getTokenVersionByMethod(tokenAddress);
+    }
+
     async getDomainTypeHash(tokenAddress: string): Promise<string | null> {
         if (this.domainTypeHashStorage.has(tokenAddress))
             return Promise.resolve(this.domainTypeHashStorage.get(tokenAddress) as string);
@@ -320,6 +326,32 @@ export class Eip2612PermitUtils {
                 }
 
                 return Number(res);
+            });
+    }
+
+    private getTokenVersionByMethod(
+        tokenAddress: string,
+        index = 0,
+    ): Promise<string> {
+        const methodName = VERSIONS_ABI[index]?.name;
+        if (!methodName) return Promise.resolve('1')
+        const callData = this.connector.contractEncodeABI(
+            VERSIONS_ABI,
+            tokenAddress,
+            methodName,
+            [ ]
+        );
+
+        return this.connector.ethCall(tokenAddress, callData)
+            .catch(() => this.getTokenVersionByMethod(
+                tokenAddress,
+                index + 1,
+            ))
+            .then((res) => {
+                if (res === '0x' || Number.isNaN(Number(res))) return '1';
+                const version = Number(res.slice(0, 65));
+                if (version < 1) return '1';
+                return version.toString();
             });
     }
 }
