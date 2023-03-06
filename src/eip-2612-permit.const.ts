@@ -294,4 +294,18 @@ export const VERSIONS_ABI: AbiItem[] = [
         stateMutability: 'view',
         type: 'function',
     },
+    {
+        constant: true,
+        inputs: [],
+        name: 'ERC712_VERSION',
+        outputs: [
+            {
+                name: '',
+                type: 'string',
+            },
+        ],
+        payable: false,
+        stateMutability: 'view',
+        type: 'function',
+    },
 ]
