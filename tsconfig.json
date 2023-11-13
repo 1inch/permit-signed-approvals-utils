@@ -5,7 +5,7 @@
     "compilerOptions": {
         "baseUrl": "./",
         "module": "commonjs",
-        "target": "es2015",
+        "target": "es2020",
         "outDir": "./dist",
         "sourceMap": true,
         "declaration": true,

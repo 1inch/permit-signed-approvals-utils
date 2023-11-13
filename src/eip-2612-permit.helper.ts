@@ -3,6 +3,7 @@ import { eip2612PermitModelFields, TOKEN_ADDRESSES_WITH_SALT } from './eip-2612-
 import { EIP712Object, EIP712TypedData } from './model/eip712.model';
 import { DaiPermitParams, PermitParams } from './model/permit.model';
 import {PermitTypedDataParamsModel} from './model/permit-typed-data-params.model';
+import { AllowanceTransfer } from "@uniswap/permit2-sdk";
 
 export function inputIsNotNullOrUndefined<T>(
     input: null | undefined | T
@@ -41,6 +42,21 @@ export function buildPermitTypedData(data: PermitTypedDataParamsModel): EIP712Ty
         },
         primaryType: 'Permit',
         domain, message: params,
+    };
+}
+
+export function buildPermit2TypedData(
+    { domain, types, values }: ReturnType<typeof AllowanceTransfer.getPermitData>,
+): EIP712TypedData {
+    // todo support batch of data
+    const PrimaryType = 'PermitSingleData';
+
+    return {
+        // todo resolve problem with types
+        types: types as never,
+        primaryType: PrimaryType,
+        domain: domain as never,
+        message: values as never,
     };
 }
 
