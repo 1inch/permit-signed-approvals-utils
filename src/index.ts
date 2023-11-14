@@ -9,3 +9,4 @@ export * from './model/permit.model';
 export * from './eip-2612-permit.const';
 export * from './eip-2612-permit.helper';
 export * from './eip-2612-permit.utils';
+export * from './permit2.utils';
