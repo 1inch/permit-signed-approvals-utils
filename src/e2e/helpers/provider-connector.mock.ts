@@ -23,8 +23,7 @@ export function getProviderConnector(signer: Signer): ProviderConnector {
             methodName: string,
             methodParams: unknown[]
         ): string {
-            // todo any
-            const iface = new utils.Interface(abi as any);
+            const iface = new utils.Interface(abi as unknown as utils.Fragment[]);
             return iface.encodeFunctionData(methodName, methodParams);
         },
         ethCall(contractAddress: string, callData: string): Promise<string> {

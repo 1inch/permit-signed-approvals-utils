@@ -26,7 +26,12 @@ import {
 import { ChainId } from './model/chain.model';
 import { MessageTypes } from './model/eip712.model';
 import { PermitRecoveryParams, SyncPermitRecoveryParams } from './model/permit-recovery.model';
-import { DaiDecodedPermitParams, DaiPermitParams, DecodedPermitParams, PermitParams } from './model/permit.model';
+import {
+    DaiDecodedPermitParams,
+    DaiPermitParams,
+    DecodedPermitParams,
+    PermitParams
+} from './model/permit.model';
 
 
 interface Eip2612PermitUtilsOptions {

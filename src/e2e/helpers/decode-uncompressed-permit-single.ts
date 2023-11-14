@@ -1,6 +1,6 @@
 import { defaultAbiCoder, splitSignature } from "ethers/lib/utils";
 import { PermitDetails, PermitSingle } from "@uniswap/permit2-sdk";
-import { BigNumber } from "ethers";
+import { BigNumber, Signature } from "ethers";
 
 export enum DecompressedPermit {
     owner,
@@ -13,7 +13,14 @@ export enum DecompressedPermit {
     signature
 }
 
-export function decodeUncompressedPermitSingle(decompressedPermit: string) {
+export interface DecodedUncompressedPermitSingle {
+    signature: Signature,
+    permitSingle: PermitSingle;
+}
+
+export function decodeUncompressedPermitSingle(
+    decompressedPermit: string
+): DecodedUncompressedPermitSingle {
     const result = decodePermit(decompressedPermit);
 
     const details: PermitDetails = {

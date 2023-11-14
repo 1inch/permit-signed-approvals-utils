@@ -1,6 +1,12 @@
 import { ethers } from "hardhat";
+import { Contract } from "ethers";
 
-export async function deploySwapTokens() {
+export async function deploySwapTokens(): Promise<{
+    dai: Contract;
+    inch: Contract;
+    chainId: number;
+    usdc: Contract;
+}> {
     const TokenMock = await ethers.getContractFactory('TokenMock');
     const dai = await TokenMock.deploy('DAI', 'DAI');
     await dai.deployed();

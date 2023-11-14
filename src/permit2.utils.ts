@@ -43,7 +43,7 @@ export class Permit2Utils {
         expiry = MAX_UINT48,
         sigDeadline = MAX_UINT48,
         compact = false
-    }: Permit2Params) {
+    }: Permit2Params): Promise<string> {
         const details = {
             token: tokenAddress,
             amount: value,
