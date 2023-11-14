@@ -26,7 +26,7 @@ import {
 import { ChainId } from './model/chain.model';
 import { MessageTypes } from './model/eip712.model';
 import { PermitRecoveryParams, SyncPermitRecoveryParams } from './model/permit-recovery.model';
-import { DaiPermitParams, PermitParams } from './model/permit.model';
+import { DaiDecodedPermitParams, DaiPermitParams, DecodedPermitParams, PermitParams } from './model/permit.model';
 
 
 interface Eip2612PermitUtilsOptions {
@@ -141,7 +141,7 @@ export class Eip2612PermitUtils {
     }
 
     async recoverPermitOwnerFromCallData(params: PermitRecoveryParams): Promise<string> {
-        const { owner } = this.connector.decodeABIParameters(
+        const { owner } = this.connector.decodeABIParameters<DecodedPermitParams>(
             EIP_2612_PERMIT_INPUTS,
             params.callData
         );
@@ -164,7 +164,8 @@ export class Eip2612PermitUtils {
         } = params;
         const {
             owner, spender, value, deadline, v, r, s
-        } = this.connector.decodeABIParameters(EIP_2612_PERMIT_INPUTS, callData);
+        } = this.connector.
+        decodeABIParameters<DecodedPermitParams>(EIP_2612_PERMIT_INPUTS, callData);
 
         const permitParams: PermitParams = { owner, spender, value, deadline, nonce };
         const permitData = buildPermitTypedData({
@@ -183,7 +184,7 @@ export class Eip2612PermitUtils {
     }
 
     async recoverDaiLikePermitOwnerFromCallData(params: PermitRecoveryParams): Promise<string> {
-        const { holder } = this.connector.decodeABIParameters(
+        const { holder } = this.connector.decodeABIParameters<DaiDecodedPermitParams>(
             DAI_EIP_2612_PERMIT_INPUTS,
             params.callData
         );
@@ -206,7 +207,8 @@ export class Eip2612PermitUtils {
         } = params;
         const {
             holder, spender, value, expiry, allowed, v, r, s
-        } = this.connector.decodeABIParameters(DAI_EIP_2612_PERMIT_INPUTS, callData);
+        } = this.connector
+            .decodeABIParameters<DaiDecodedPermitParams>(DAI_EIP_2612_PERMIT_INPUTS, callData);
 
         const permitParams: DaiPermitParams = { holder, spender, value, expiry, nonce, allowed };
         const permitData = buildPermitTypedData({

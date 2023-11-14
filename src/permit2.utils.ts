@@ -4,14 +4,16 @@ import { ProviderConnector } from "./connector/provider.connector";
 import { buildPermit2TypedData } from "./eip-2612-permit.helper";
 import { getPermit2Contract } from "./helpers/get-permit2-contract";
 import { splitSignature } from "ethers/lib/utils";
-import { compressPermit, decompressPermit, trim0x } from "@1inch/solidity-utils";
+import { compressPermit } from "./helpers/compress-permit";
+import { decompressPermit } from "./helpers/decompress-permit";
+import { MAX_UINT48 } from "./helpers/constants";
+import { trim0x } from "./helpers/trim-0x";
 
-export function cutSelector(data: string): string {
+function cutSelector(data: string): string {
     const hexPrefix = '0x'
     return hexPrefix + data.substr(hexPrefix.length + 8)
 }
 
-export const MAX_UINT48 = 2n ** 48n - 1n;
 export interface Permit2Params {
     walletAddress: string;
     spender: string;
@@ -24,7 +26,7 @@ export interface Permit2Params {
     compact?: boolean;
 }
 
-export class Permit2Builder {
+export class Permit2Utils {
     constructor(
         private connector: ProviderConnector,
     ) {
@@ -63,7 +65,7 @@ export class Permit2Builder {
 
         const dataHash = TypedDataUtils.hashStruct(
             'PermitSingle',
-            permitData.values as unknown as any,
+            permitData.values as unknown as never,
             permitData.types,
             SignTypedDataVersion.V4
         ).toString('hex');

@@ -1,14 +1,13 @@
 import { ProviderConnector } from "../../connector/provider.connector";
-import {
-    SignerWithAddress,
-} from "@1inch/solidity-utils/node_modules/@nomiclabs/hardhat-ethers/signers";
 import { EIP712TypedData } from "../../model/eip712.model";
 import { AbiItem } from "web3-utils";
-import {utils} from 'ethers'
+import { utils } from 'ethers'
 import { ethers } from "hardhat";
 
+export type Signer = Awaited<ReturnType<typeof ethers.getSigners>>[0];
+
 // eslint-disable-next-line max-lines-per-function
-export function getProviderConnector(signer: SignerWithAddress): ProviderConnector {
+export function getProviderConnector(signer: Signer): ProviderConnector {
     return {
         signTypedData(
             _: string,

@@ -27,12 +27,6 @@ const config: HardhatUserConfig = {
             default: 0,
         },
     },
-    dependencyCompiler: {
-        paths: [
-            '@1inch/solidity-utils/contracts/mocks/TokenCustomDecimalsMock.sol',
-            '@1inch/solidity-utils/contracts/mocks/TokenMock.sol',
-        ],
-    },
     paths: {
         sources: "./src/e2e/",
         tests: "./src/e2e/",
