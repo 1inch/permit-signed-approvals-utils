@@ -8,7 +8,6 @@ import { compressPermit } from "./helpers/compress-permit";
 import { decompressPermit } from "./helpers/decompress-permit";
 import { MAX_UINT48 } from "./helpers/constants";
 import { trim0x } from "./helpers/trim-0x";
-
 function cutSelector(data: string): string {
     const hexPrefix = '0x'
     return hexPrefix + data.substr(hexPrefix.length + 8)
@@ -24,6 +23,12 @@ export interface Permit2Params {
     expiry?: bigint;
     sigDeadline?: bigint;
     compact?: boolean;
+}
+
+export interface AllowanceResponse {
+    amount: bigint;
+    expiration: number;
+    nonce: bigint;
 }
 
 export class Permit2Utils {

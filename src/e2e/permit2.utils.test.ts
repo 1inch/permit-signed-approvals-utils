@@ -3,7 +3,7 @@ import { deploySwapTokens } from "./helpers/fixtures";
 import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 import { Permit2Utils } from "../permit2.utils";
 import { getProviderConnector, Signer } from "./helpers/provider-connector.mock";
-import { PERMIT2_ADDRESS } from "@uniswap/permit2-sdk";
+import { MaxUint256, PERMIT2_ADDRESS } from "@uniswap/permit2-sdk";
 import { expect } from 'chai';
 import { decodeUncompressedPermitSingle } from "./helpers/decode-uncompressed-permit-single";
 import { createPermit2ContractAndDeploy } from "./helpers/create-permit2-contract-and-deployt";
@@ -90,7 +90,7 @@ describe('permit2',  () => {
             });
 
             it('set expiry & sigDeadline', async () => {
-                await dai.connect(addr1).approve(PERMIT2_ADDRESS, 2);
+                await dai.connect(addr1).approve(PERMIT2_ADDRESS, MaxUint256.toBigInt());
 
                 const deadline = Math.round((Date.now() / 1000)) + 3000;
 

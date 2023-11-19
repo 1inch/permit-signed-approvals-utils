@@ -4,6 +4,7 @@ import { EIP712Object, EIP712TypedData } from './model/eip712.model';
 import { DaiPermitParams, PermitParams } from './model/permit.model';
 import {PermitTypedDataParamsModel} from './model/permit-typed-data-params.model';
 import { AllowanceTransfer } from "@uniswap/permit2-sdk";
+import { Eip712Permit2 } from "./model/eip712-permit2.model";
 
 export function inputIsNotNullOrUndefined<T>(
     input: null | undefined | T
@@ -47,17 +48,13 @@ export function buildPermitTypedData(data: PermitTypedDataParamsModel): EIP712Ty
 
 export function buildPermit2TypedData(
     { domain, types, values }: ReturnType<typeof AllowanceTransfer.getPermitData>,
-): EIP712TypedData {
-    // todo support batch of data
-    const PrimaryType = 'PermitSingleData';
-
+): Eip712Permit2 {
     return {
-        // todo resolve problem with types
-        types: types as never,
-        primaryType: PrimaryType,
-        domain: domain as never,
-        message: values as never,
-    };
+        primaryType: 'PermitSingle',
+        types: types,
+        domain: domain,
+        message: values,
+    } as Eip712Permit2;
 }
 
 export function fromRpcSig(sig: string): {v: number; r: Buffer; s: Buffer} {
