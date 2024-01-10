@@ -4,3 +4,4 @@ node_modules
 coverage
 artifacts
 cache
+yarn-error.log
