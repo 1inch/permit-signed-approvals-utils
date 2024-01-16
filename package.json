@@ -4,7 +4,7 @@
     "description": "Utils library for EIP-2612: permit – 712-signed approvals",
     "main": "index.js",
     "scripts": {
-        "prebuild": "rm -rf dist && yarn run make-badges",
+        "prebuild": "rm -rf dist && yarn run test:coverage && yarn run make-badges",
         "build": "tsc --module commonjs",
         "postbuild": "cp package.json dist && cp README.md dist",
         "lint": "eslint ./src --ext .js,.ts",

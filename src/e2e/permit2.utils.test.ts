@@ -31,7 +31,7 @@ describe('permit2',  () => {
     });
 
 
-    describe('permit2', async () => {
+    describe('permit2',  () => {
         let dai: Contract;
         let chainId: number;
         let permit2C2: Contract;
@@ -65,7 +65,7 @@ describe('permit2',  () => {
             );
         }
 
-        describe('decompressed singlePermit', async () => {
+        describe('decompressed singlePermit',  () => {
             it('infinite expiry', async () => {
                 await dai.connect(addr1).approve(PERMIT2_ADDRESS, 1);
 
