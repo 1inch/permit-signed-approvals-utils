@@ -28,7 +28,7 @@ const config: HardhatUserConfig = {
         },
     },
     paths: {
-        sources: "./src/e2e/",
+        sources: "./src/e2e/contracts",
         tests: "./src/e2e/",
         cache: "./cache",
         artifacts: "./artifacts"
