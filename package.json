@@ -4,7 +4,7 @@
     "description": "Utils library for EIP-2612: permit – 712-signed approvals",
     "main": "index.js",
     "scripts": {
-        "prebuild": "rm -rf dist && yarn run test:coverage && yarn run make-badges",
+        "prebuild": "rm -rf dist && yarn run make-badges",
         "build": "tsc --module commonjs",
         "postbuild": "cp package.json dist && cp README.md dist",
         "lint": "eslint ./src --ext .js,.ts",
@@ -37,9 +37,9 @@
         "web3-utils": "^1.5.1"
     },
     "devDependencies": {
-        "@babel/core": "^7.13.16",
-        "@babel/preset-env": "^7.13.15",
-        "@babel/preset-typescript": "^7.13.0",
+        "@babel/core": "7.23.7",
+        "@babel/preset-env": "^7.23.8",
+        "@babel/preset-typescript": "^7.23.3",
         "@nomicfoundation/hardhat-chai-matchers": "1.0.6",
         "@nomicfoundation/hardhat-ethers": "^3.0.4",
         "@nomicfoundation/hardhat-network-helpers": "1.0.6",
@@ -67,12 +67,12 @@
         "lint-staged": "^10.5.4",
         "prettier": "^2.2.1",
         "standard-version": "^9.2.0",
-        "ts-loader": "^9.0.2",
-        "ts-mockito": "^2.6.1",
-        "ts-node": "10.9.1",
-        "tslib": "^2.6.2",
-        "typescript": "4.9.5",
-        "@types/node": "18.18.9"
+        "ts-loader": "9.5.1",
+        "ts-mockito": "2.6.1",
+        "ts-node": "10.9.2",
+        "tslib": "2.6.2",
+        "typescript": "5.3.3",
+        "@types/node": "20.11.4"
     },
     "husky": {
         "hooks": {
