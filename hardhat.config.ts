@@ -17,7 +17,7 @@ const config: HardhatUserConfig = {
     },
     networks: {
         hardhat: {
-            chainId: 1
+            chainId: 1337
         }
     },
     defaultNetwork: "hardhat",
