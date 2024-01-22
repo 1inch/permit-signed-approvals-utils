@@ -2,7 +2,7 @@
 # yarn lockfile v1
 
 
-"@1inch/solidity-utils@^3.7.1":
+"@1inch/solidity-utils@3.7.1":
   version "3.7.1"
   resolved "https://npm.pkg.github.com/download/@1inch/solidity-utils/3.7.1/473e4d657b569a265112926c799f6d08c8d7b5d0#473e4d657b569a265112926c799f6d08c8d7b5d0"
   integrity sha512-a5QXT9CqPUtylO2qyYysRU+T36TawHZzJt1upwc8LWwo3OARyFMUItzepRM+UlEn5dg7ki8f9mywWz2e0y/vhg==
