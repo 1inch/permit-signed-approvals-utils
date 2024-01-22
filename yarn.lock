@@ -4,8 +4,8 @@
 
 "@1inch/solidity-utils@3.5.5":
   version "3.5.5"
-  resolved "https://npm.pkg.github.com/download/@1inch/solidity-utils/3.5.5/1e8b8d1e44f65770c118ca5e318abc7482397bd9#1e8b8d1e44f65770c118ca5e318abc7482397bd9"
-  integrity sha512-4pSzrUyojte2uKnj7r/BsdIWhT9fdKfsYCE0q2pGtTQE76YfMeO/08iDQMUiLH/pX26l7vaSKHM9UtgI80r1Tw==
+  resolved "https://registry.yarnpkg.com/@1inch/solidity-utils/-/solidity-utils-3.5.5.tgz#14353aa36270e4213927c7de31088953aa277a25"
+  integrity sha512-uX9fzLLxQIvXB4gIczTZ11C2tRrqswJsXV7WNhdPn5CZnCrp8gyBGnuxLjEbY1jZK+NPs2AtZB7FD+/+0ZN+Kg==
   dependencies:
     "@metamask/eth-sig-util" "7.0.1"
     "@nomicfoundation/hardhat-ethers" "3.0.5"
