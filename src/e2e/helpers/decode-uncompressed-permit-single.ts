@@ -1,6 +1,8 @@
-import { defaultAbiCoder, splitSignature } from "ethers/lib/utils";
+
 import { PermitDetails, PermitSingle } from "@uniswap/permit2-sdk";
-import { BigNumber, Signature } from "ethers";
+import { AbiCoder, Signature } from "ethers";
+
+type DecodeResult = ReturnType<InstanceType<typeof AbiCoder>['decode']>;
 
 export enum DecompressedPermit {
     owner,
@@ -25,7 +27,7 @@ export function decodeUncompressedPermitSingle(
 
     const details: PermitDetails = {
         token: result[DecompressedPermit.token],
-        amount: (result[DecompressedPermit.amount] as BigNumber).toBigInt(),
+        amount: result[DecompressedPermit.amount],
         expiration: BigInt((result[DecompressedPermit.expiration] as number)),
         nonce: BigInt(result[DecompressedPermit.nonce] as number)
     };
@@ -33,10 +35,10 @@ export function decodeUncompressedPermitSingle(
     const permitSingle: PermitSingle = {
         details,
         spender: result[DecompressedPermit.spender],
-        sigDeadline: (result[DecompressedPermit.sigDeadline]).toBigInt()
+        sigDeadline: result[DecompressedPermit.sigDeadline]
     };
 
-    const signature = splitSignature(
+    const signature = Signature.from(
         result[DecompressedPermit.signature] as string
     );
 
@@ -46,8 +48,9 @@ export function decodeUncompressedPermitSingle(
     }
 }
 
-function decodePermit(decompressedPermit: string): ReturnType<typeof defaultAbiCoder.decode> {
-    return defaultAbiCoder.decode([
+function decodePermit(decompressedPermit: string): DecodeResult {
+    const abiCoder = new AbiCoder();
+    return abiCoder.decode([
         'address',
         'address',
         'uint160',

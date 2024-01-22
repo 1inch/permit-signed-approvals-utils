@@ -1,6 +1,6 @@
-import { defaultAbiCoder } from "ethers/lib/utils";
 import { MAX_UINT48 } from "./constants";
 import { trim0x } from "./trim-0x";
+import { AbiCoder } from 'ethers';
 
 interface PermitArgs {
     amount: bigint;
@@ -48,7 +48,8 @@ export function decompressPermit(
 function encodePermitArgs(
     owner: string, token: string, spender: string, permitArgs: PermitArgs
 ): string {
-    return defaultAbiCoder.encode(
+    const abiCoder = new AbiCoder();
+    return abiCoder.encode(
         ENCODED_PERMIT_ARGS,
         [
             owner,

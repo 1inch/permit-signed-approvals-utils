@@ -15,7 +15,7 @@ export function getProviderConnector(signer: Signer): ProviderConnector {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             _typedDataHash: string
         ): Promise<string> {
-            return signer._signTypedData(typedData.domain, typedData.types, typedData.message);
+            return signer.signTypedData(typedData.domain, typedData.types, typedData.message);
         },
         contractEncodeABI(
             abi: AbiItem[],

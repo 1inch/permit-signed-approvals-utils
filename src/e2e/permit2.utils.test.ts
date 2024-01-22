@@ -7,23 +7,22 @@ import { MaxUint256, PERMIT2_ADDRESS } from "@uniswap/permit2-sdk";
 import { expect } from 'chai';
 import { decodeUncompressedPermitSingle } from "./helpers/decode-uncompressed-permit-single";
 import { createPermit2ContractAndDeploy } from "./helpers/create-permit2-contract-and-deployt";
-import { parseUnits } from "ethers/lib/utils";
 import { trim0x } from "../helpers/trim-0x";
-import { Contract } from "ethers";
+import { Contract, parseUnits } from "ethers";
 import { ProviderConnector } from "../connector/provider.connector";
 
 const SPENDER_ADDRESS = '0x1111111254eeb25477b68fb85ed929f73a960582';
 
 export function ether(n: string): bigint {
-    return parseUnits(n).toBigInt();
+    return parseUnits(n);
 }
 
 describe('permit2',  () => {
     let addr: Signer, addr1: Signer;
 
     async function initContracts(dai: Contract): Promise<void>{
-        await dai.mint(addr1.address, ether('1000000'));
-        await dai.mint(addr.address, ether('1000000'));
+        await dai.mint(await addr1.getAddress(), ether('1000000'));
+        await dai.mint(await addr.getAddress(), ether('1000000'));
     }
 
     beforeEach(async  () => {
@@ -59,7 +58,7 @@ describe('permit2',  () => {
             const decodedPermit = decodeUncompressedPermitSingle(decompressedPermit);
 
             await permit2C2.permit(
-                addr1.address,
+                await addr1.getAddress(),
                 decodedPermit.permitSingle,
                 decodedPermit.signature.r + trim0x(decodedPermit.signature.yParityAndS)
             );
@@ -70,10 +69,10 @@ describe('permit2',  () => {
                 await dai.connect(addr1).approve(PERMIT2_ADDRESS, 1);
 
                 const decompressedPermit = await permit2Builder.buildPermit2({
-                    walletAddress: addr1.address,
+                    walletAddress: await addr1.getAddress(),
                     spender: SPENDER_ADDRESS,
                     value: BigInt(1),
-                    tokenAddress: dai.address,
+                    tokenAddress: await dai.getAddress(),
                     nonce: BigInt(0),
                     chainId,
                 });
@@ -81,11 +80,11 @@ describe('permit2',  () => {
                 await decodePermitAndCall(decompressedPermit);
 
                 const result = await permit2C2.allowance(
-                    addr1.address,
-                    dai.address,
+                    await addr1.getAddress(),
+                    await dai.getAddress(),
                     SPENDER_ADDRESS
                 );
-                expect(result.amount.toBigInt()).to.equal(BigInt(1));
+                expect(result.amount).to.equal(BigInt(1));
                 expect(result.nonce).to.equal(1);
             });
 
@@ -95,10 +94,10 @@ describe('permit2',  () => {
                 const deadline = Math.round((Date.now() / 1000)) + 3000;
 
                 const decompressedPermit = await permit2Builder.buildPermit2({
-                    walletAddress: addr1.address,
+                    walletAddress: await addr1.getAddress(),
                     spender: SPENDER_ADDRESS,
                     value: BigInt(2),
-                    tokenAddress: dai.address,
+                    tokenAddress: await dai.getAddress(),
                     nonce: BigInt(0),
                     chainId,
                     expiry: BigInt(deadline),
@@ -108,11 +107,11 @@ describe('permit2',  () => {
                 await decodePermitAndCall(decompressedPermit);
 
                 const result = await permit2C2.allowance(
-                    addr1.address,
-                    dai.address,
+                    await addr1.getAddress(),
+                    await dai.getAddress(),
                     SPENDER_ADDRESS
                 );
-                expect(result.amount.toBigInt()).to.equal(BigInt(2));
+                expect(result.amount).to.equal(BigInt(2));
                 expect(result.nonce).to.equal(1);
                 expect(result.expiration).to.equal(deadline);
             });

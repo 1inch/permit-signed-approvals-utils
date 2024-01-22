@@ -9,12 +9,12 @@ export async function deploySwapTokens(): Promise<{
 }> {
     const TokenMock = await ethers.getContractFactory('TokenMock');
     const dai = await TokenMock.deploy('DAI', 'DAI');
-    await dai.deployed();
+    await dai.waitForDeployment();
     const inch = await TokenMock.deploy('1INCH', '1INCH');
-    await inch.deployed();
+    await inch.waitForDeployment();
     const TokenCustomDecimalsMock = await ethers.getContractFactory('TokenCustomDecimalsMock');
     const usdc = await TokenCustomDecimalsMock.deploy('USDC', 'USDC', '0', 6);
-    await usdc.deployed();
+    await usdc.waitForDeployment();
     const chainId = (await ethers.provider.getNetwork()).chainId;
     return { dai, inch, chainId, usdc };
 };

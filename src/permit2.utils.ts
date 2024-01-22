@@ -3,11 +3,11 @@ import { SignTypedDataVersion, TypedDataUtils } from "@metamask/eth-sig-util";
 import { ProviderConnector } from "./connector/provider.connector";
 import { buildPermit2TypedData } from "./eip-2612-permit.helper";
 import { getPermit2Contract } from "./helpers/get-permit2-contract";
-import { splitSignature } from "ethers/lib/utils";
 import { compressPermit } from "./helpers/compress-permit";
 import { decompressPermit } from "./helpers/decompress-permit";
 import { MAX_UINT48 } from "./helpers/constants";
 import { trim0x } from "./helpers/trim-0x";
+import { Signature } from 'ethers';
 function cutSelector(data: string): string {
     const hexPrefix = '0x'
     return hexPrefix + data.substr(hexPrefix.length + 8)
@@ -79,7 +79,7 @@ export class Permit2Utils {
 
         const signedPermit = await this.connector.signTypedData(walletAddress, typedData, dataHash);
 
-        const signature = splitSignature(signedPermit);
+        const signature = Signature.from(signedPermit);
 
         const permit2Contract = getPermit2Contract();
         const permitCall = cutSelector(
