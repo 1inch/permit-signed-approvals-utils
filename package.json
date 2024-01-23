@@ -9,7 +9,7 @@
         "postbuild": "cp package.json dist && cp README.md dist",
         "lint": "eslint ./src --ext .js,.ts",
         "release": "standard-version",
-        "test": "jest",
+        "test": "jest && yarn run test:e2e",
         "test:e2e": "hardhat test",
         "test:coverage": "jest --collectCoverage",
         "typecheck": "tsc --noEmit --skipLibCheck",
