@@ -1,14 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`eip-2612 permit helpers buildPermitTypedData() 1`] = `
-Object {
-  "domain": Object {
+{
+  "domain": {
     "chainId": 56,
     "name": "1INCH Token",
     "verifyingContract": "0x111111111117dc0aa78b770fa6a738034120c302",
     "version": "1",
   },
-  "message": Object {
+  "message": {
     "deadline": 192689033,
     "nonce": 0,
     "owner": "0x2c9b2dbdba8a9c969ac24153f5c1c23cb0e63914",
@@ -16,43 +16,43 @@ Object {
     "value": "1000000000",
   },
   "primaryType": "Permit",
-  "types": Object {
-    "EIP712Domain": Array [
-      Object {
+  "types": {
+    "EIP712Domain": [
+      {
         "name": "name",
         "type": "string",
       },
-      Object {
+      {
         "name": "version",
         "type": "string",
       },
-      Object {
+      {
         "name": "chainId",
         "type": "uint256",
       },
-      Object {
+      {
         "name": "verifyingContract",
         "type": "address",
       },
     ],
-    "Permit": Array [
-      Object {
+    "Permit": [
+      {
         "name": "owner",
         "type": "address",
       },
-      Object {
+      {
         "name": "spender",
         "type": "address",
       },
-      Object {
+      {
         "name": "value",
         "type": "uint256",
       },
-      Object {
+      {
         "name": "nonce",
         "type": "uint256",
       },
-      Object {
+      {
         "name": "deadline",
         "type": "uint256",
       },
@@ -62,13 +62,13 @@ Object {
 `;
 
 exports[`eip-2612 permit helpers buildPermitTypedData({isDomainWithoutVersion: true}) 1`] = `
-Object {
-  "domain": Object {
+{
+  "domain": {
     "chainId": 56,
     "name": "1INCH Token",
     "verifyingContract": "0x111111111117dc0aa78b770fa6a738034120c302",
   },
-  "message": Object {
+  "message": {
     "deadline": 192689033,
     "nonce": 0,
     "owner": "0x2c9b2dbdba8a9c969ac24153f5c1c23cb0e63914",
@@ -76,39 +76,39 @@ Object {
     "value": "1000000000",
   },
   "primaryType": "Permit",
-  "types": Object {
-    "EIP712Domain": Array [
-      Object {
+  "types": {
+    "EIP712Domain": [
+      {
         "name": "name",
         "type": "string",
       },
-      Object {
+      {
         "name": "chainId",
         "type": "uint256",
       },
-      Object {
+      {
         "name": "verifyingContract",
         "type": "address",
       },
     ],
-    "Permit": Array [
-      Object {
+    "Permit": [
+      {
         "name": "owner",
         "type": "address",
       },
-      Object {
+      {
         "name": "spender",
         "type": "address",
       },
-      Object {
+      {
         "name": "value",
         "type": "uint256",
       },
-      Object {
+      {
         "name": "nonce",
         "type": "uint256",
       },
-      Object {
+      {
         "name": "deadline",
         "type": "uint256",
       },
@@ -118,13 +118,13 @@ Object {
 `;
 
 exports[`eip-2612 permit helpers buildPermitTypedData({isSaltInsteadOfChainId: true, isDomainWithoutVersion: true}) 1`] = `
-Object {
-  "domain": Object {
+{
+  "domain": {
     "name": "USD Coin (PoS)",
     "salt": "0x0000000000000000000000000000000000000000000000000000000000000089",
     "verifyingContract": "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
   },
-  "message": Object {
+  "message": {
     "deadline": 192689033,
     "nonce": 0,
     "owner": "0x2c9b2dbdba8a9c969ac24153f5c1c23cb0e63914",
@@ -132,39 +132,39 @@ Object {
     "value": "1000000000",
   },
   "primaryType": "Permit",
-  "types": Object {
-    "EIP712Domain": Array [
-      Object {
+  "types": {
+    "EIP712Domain": [
+      {
         "name": "name",
         "type": "string",
       },
-      Object {
+      {
         "name": "verifyingContract",
         "type": "address",
       },
-      Object {
+      {
         "name": "salt",
         "type": "bytes32",
       },
     ],
-    "Permit": Array [
-      Object {
+    "Permit": [
+      {
         "name": "owner",
         "type": "address",
       },
-      Object {
+      {
         "name": "spender",
         "type": "address",
       },
-      Object {
+      {
         "name": "value",
         "type": "uint256",
       },
-      Object {
+      {
         "name": "nonce",
         "type": "uint256",
       },
-      Object {
+      {
         "name": "deadline",
         "type": "uint256",
       },
@@ -174,14 +174,14 @@ Object {
 `;
 
 exports[`eip-2612 permit helpers buildPermitTypedData({isSaltInsteadOfChainId: true}) 1`] = `
-Object {
-  "domain": Object {
+{
+  "domain": {
     "name": "USD Coin (PoS)",
     "salt": "0x0000000000000000000000000000000000000000000000000000000000000089",
     "verifyingContract": "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
     "version": "1",
   },
-  "message": Object {
+  "message": {
     "deadline": 192689033,
     "nonce": 0,
     "owner": "0x2c9b2dbdba8a9c969ac24153f5c1c23cb0e63914",
@@ -189,43 +189,43 @@ Object {
     "value": "1000000000",
   },
   "primaryType": "Permit",
-  "types": Object {
-    "EIP712Domain": Array [
-      Object {
+  "types": {
+    "EIP712Domain": [
+      {
         "name": "name",
         "type": "string",
       },
-      Object {
+      {
         "name": "version",
         "type": "string",
       },
-      Object {
+      {
         "name": "verifyingContract",
         "type": "address",
       },
-      Object {
+      {
         "name": "salt",
         "type": "bytes32",
       },
     ],
-    "Permit": Array [
-      Object {
+    "Permit": [
+      {
         "name": "owner",
         "type": "address",
       },
-      Object {
+      {
         "name": "spender",
         "type": "address",
       },
-      Object {
+      {
         "name": "value",
         "type": "uint256",
       },
-      Object {
+      {
         "name": "nonce",
         "type": "uint256",
       },
-      Object {
+      {
         "name": "deadline",
         "type": "uint256",
       },
@@ -235,9 +235,9 @@ Object {
 `;
 
 exports[`eip-2612 permit helpers fromRpcSig() 1`] = `
-Object {
-  "r": Object {
-    "data": Array [
+{
+  "r": {
+    "data": [
       59,
       68,
       130,
@@ -273,8 +273,8 @@ Object {
     ],
     "type": "Buffer",
   },
-  "s": Object {
-    "data": Array [
+  "s": {
+    "data": [
       76,
       148,
       241,
@@ -315,9 +315,9 @@ Object {
 `;
 
 exports[`eip-2612 permit helpers fromRpcSig() should support both versions of \`eth_sign\` responses 1`] = `
-Object {
-  "r": Object {
-    "data": Array [
+{
+  "r": {
+    "data": [
       59,
       68,
       130,
@@ -353,8 +353,8 @@ Object {
     ],
     "type": "Buffer",
   },
-  "s": Object {
-    "data": Array [
+  "s": {
+    "data": [
       76,
       148,
       241,
@@ -395,14 +395,14 @@ Object {
 `;
 
 exports[`eip-2612 permit helpers getPermitContractCallParams() 1`] = `
-Array [
+[
   "0x2c9b2dbdba8a9c969ac24153f5c1c23cb0e63914",
   "0x11111112542d85b3ef69ae05771c2dccff4faa26",
   "1000000000",
   192689033,
   28,
-  Object {
-    "data": Array [
+  {
+    "data": [
       59,
       68,
       130,
@@ -438,8 +438,8 @@ Array [
     ],
     "type": "Buffer",
   },
-  Object {
-    "data": Array [
+  {
+    "data": [
       76,
       148,
       241,

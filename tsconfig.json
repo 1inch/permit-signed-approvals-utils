@@ -1,7 +1,7 @@
 {
     "compileOnSave": false,
     "include": ["src/**/*"],
-    "exclude": ["src/**/*.test.ts", "test/*"],
+    "exclude": ["src/**/*.test.ts", "test/*", "src/e2e"],
     "compilerOptions": {
         "baseUrl": "./",
         "module": "commonjs",
@@ -22,6 +22,6 @@
         "resolveJsonModule": true,
         "strictNullChecks": true,
         "typeRoots": ["node_modules/@types"],
-        "lib": ["es2018", "dom"]
+        "lib": ["es2018", "dom"],
     }
 }
