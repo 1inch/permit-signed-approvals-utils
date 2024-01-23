@@ -6,7 +6,7 @@
 export default {
     clearMocks: true,
     coverageDirectory: 'coverage',
-    coveragePathIgnorePatterns: ['/node_modules/', 'src/index.ts', 'src/e2e/'],
+    coveragePathIgnorePatterns: ['/node_modules/', 'src/index.ts'],
     coverageProvider: 'v8',
     coverageReporters: [
         'json-summary',

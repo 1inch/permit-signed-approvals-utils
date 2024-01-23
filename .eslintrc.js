@@ -23,7 +23,7 @@ module.exports = {
     },
     overrides: [
         {
-            files: ['src/**/*.test.ts'],
+            files: ['src/**/*.test.ts', 'src/**/*.e2e.ts'],
             rules: {
                 'max-lines-per-function': ['error', 400],
                 'max-len': ['error', {code: 300}],
