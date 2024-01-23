@@ -6,7 +6,7 @@
 export default {
     clearMocks: true,
     coverageDirectory: 'coverage',
-    coveragePathIgnorePatterns: ['/node_modules/', 'src/index.ts'],
+    coveragePathIgnorePatterns: ['/node_modules/', 'src/index.ts', 'src/e2e/'],
     coverageProvider: 'v8',
     coverageReporters: [
         'json-summary',
@@ -15,8 +15,5 @@ export default {
     testMatch: [
         '**/__tests__/**/*.[jt]s?(x)',
         '**/?(*.)+(spec|test).[tj]s?(x)',
-    ],
-    testPathIgnorePatterns: [
-      "./src/e2e/**/*"
     ],
 };
