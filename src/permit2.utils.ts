@@ -1,0 +1,102 @@
+import { AllowanceTransfer, PERMIT2_ADDRESS } from "@uniswap/permit2-sdk";
+import { SignTypedDataVersion, TypedDataUtils } from "@metamask/eth-sig-util";
+import { ProviderConnector } from "./connector/provider.connector";
+import { buildPermit2TypedData } from "./eip-2612-permit.helper";
+import { getPermit2Contract } from "./helpers/get-permit2-contract";
+import { compressPermit } from "./helpers/compress-permit";
+import { decompressPermit } from "./helpers/decompress-permit";
+import { MAX_UINT48 } from "./helpers/constants";
+import { trim0x } from "./helpers/trim-0x";
+import { Signature } from 'ethers';
+function cutSelector(data: string): string {
+    const hexPrefix = '0x'
+    return hexPrefix + data.substr(hexPrefix.length + 8)
+}
+
+export interface Permit2Params {
+    walletAddress: string;
+    spender: string;
+    value: string | bigint;
+    tokenAddress: string;
+    nonce: bigint;
+    chainId: number;
+    expiry?: bigint;
+    sigDeadline?: bigint;
+    compact?: boolean;
+}
+
+export interface AllowanceResponse {
+    amount: bigint;
+    expiration: number;
+    nonce: bigint;
+}
+
+export class Permit2Utils {
+    constructor(
+        private connector: ProviderConnector,
+    ) {
+    }
+
+    // eslint-disable-next-line max-lines-per-function
+    async buildPermit2({
+        walletAddress,
+        spender,
+        value,
+        tokenAddress,
+        nonce,
+        chainId,
+        expiry = MAX_UINT48,
+        sigDeadline = MAX_UINT48,
+        compact = false
+    }: Permit2Params): Promise<string> {
+        const details = {
+            token: tokenAddress,
+            amount: value,
+            expiration: expiry,
+            nonce
+        };
+
+        const permitSingle = {
+            details,
+            spender,
+            sigDeadline
+        };
+
+        const permitData = AllowanceTransfer.getPermitData(
+            permitSingle,
+            PERMIT2_ADDRESS,
+            chainId
+        );
+
+        const dataHash = TypedDataUtils.hashStruct(
+            'PermitSingle',
+            permitData.values as unknown as never,
+            permitData.types,
+            SignTypedDataVersion.V4
+        ).toString('hex');
+
+        const typedData = buildPermit2TypedData(permitData);
+
+        const signedPermit = await this.connector.signTypedData(walletAddress, typedData, dataHash);
+
+        const signature = Signature.from(signedPermit);
+
+        const permit2Contract = getPermit2Contract();
+        const permitCall = cutSelector(
+            permit2Contract.interface.encodeFunctionData('permit', [
+                walletAddress,
+                permitSingle,
+                signature.r + trim0x(signature.yParityAndS)
+            ])
+        );
+
+        return compact
+            ? compressPermit(permitCall)
+            : decompressPermit(
+                compressPermit(permitCall),
+                tokenAddress,
+                walletAddress,
+                spender
+            )
+    }
+}

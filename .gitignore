@@ -2,3 +2,6 @@ dist
 node_modules
 .idea
 coverage
+artifacts
+cache
+yarn-error.log
