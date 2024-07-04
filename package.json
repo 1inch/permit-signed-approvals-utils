@@ -29,7 +29,6 @@
     },
     "homepage": "https://github.com/1inch/permit-signed-approvals-utils#readme",
     "dependencies": {
-        "@uniswap/permit2-sdk": "^1.2.0",
         "ethers": "^6.13.1"
     },
     "devDependencies": {
@@ -67,7 +66,8 @@
         "ts-mockito": "2.6.1",
         "ts-node": "10.9.2",
         "tslib": "2.6.2",
-        "typescript": "5.3.3"
+        "typescript": "5.3.3",
+        "yarn-audit-fix": "^10.0.7"
     },
     "husky": {
         "hooks": {

@@ -1,6 +1,6 @@
 
-import { PermitDetails, PermitSingle } from "@uniswap/permit2-sdk";
 import { AbiCoder, Signature } from "ethers";
+import {PermitDetails, PermitSingle} from '../../model/eip712-permit2.model';
 
 type DecodeResult = ReturnType<InstanceType<typeof AbiCoder>['decode']>;
 

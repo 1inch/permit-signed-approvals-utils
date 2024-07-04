@@ -2,8 +2,7 @@ import { eip2612PermitModelFields, TOKEN_ADDRESSES_WITH_SALT } from './eip-2612-
 import {EIP712Object, EIP712TypedData} from './model/eip712.model';
 import { DaiPermitParams, PermitParams } from './model/permit.model';
 import {PermitTypedDataParamsModel} from './model/permit-typed-data-params.model';
-import { AllowanceTransfer } from "@uniswap/permit2-sdk";
-import { Eip712Permit2 } from "./model/eip712-permit2.model";
+import {Eip712Permit2, PermitSingleData} from "./model/eip712-permit2.model";
 import {abiCoder} from './connector/abi-coder';
 
 // eslint-disable-next-line max-lines-per-function
@@ -34,7 +33,7 @@ export function buildPermitTypedData(data: PermitTypedDataParamsModel): EIP712Ty
 }
 
 export function buildPermit2TypedData(
-    { domain, types, values }: ReturnType<typeof AllowanceTransfer.getPermitData>,
+    { domain, types, values }: PermitSingleData
 ): Eip712Permit2 {
     return {
         primaryType: 'PermitSingle',
