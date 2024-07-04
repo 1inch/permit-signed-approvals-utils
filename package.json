@@ -29,11 +29,8 @@
     },
     "homepage": "https://github.com/1inch/permit-signed-approvals-utils#readme",
     "dependencies": {
-        "@metamask/eth-sig-util": "7.0.0",
         "@uniswap/permit2-sdk": "^1.2.0",
-        "i": "^0.3.7",
-        "web3": "^1.5.1",
-        "web3-utils": "^1.5.1"
+        "ethers": "^6.13.1"
     },
     "devDependencies": {
         "@1inch/solidity-utils": "3.5.5",
@@ -46,6 +43,7 @@
         "@openzeppelin/contracts": "5.0.1",
         "@types/jest": "29.5.11",
         "@types/node": "20.11.4",
+        "@types/ws": "^8.5.10",
         "@typescript-eslint/eslint-plugin": "6.19.0",
         "babel-jest": "29.7.0",
         "chai": "4.3.7",
@@ -56,7 +54,6 @@
         "eslint-plugin-node": "11.1.0",
         "eslint-plugin-promise": "4.3.1",
         "eslint-plugin-unused-imports": "3.0.0",
-        "ethers": "6.9.0",
         "hardhat": "2.19.4",
         "hardhat-dependency-compiler": "1.1.3",
         "hardhat-deploy": "0.11.45",

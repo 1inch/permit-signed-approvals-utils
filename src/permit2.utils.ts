@@ -1,5 +1,4 @@
 import { AllowanceTransfer, PERMIT2_ADDRESS } from "@uniswap/permit2-sdk";
-import { SignTypedDataVersion, TypedDataUtils } from "@metamask/eth-sig-util";
 import { ProviderConnector } from "./connector/provider.connector";
 import { buildPermit2TypedData } from "./eip-2612-permit.helper";
 import { getPermit2Contract } from "./helpers/get-permit2-contract";
@@ -7,7 +6,7 @@ import { compressPermit } from "./helpers/compress-permit";
 import { decompressPermit } from "./helpers/decompress-permit";
 import { MAX_UINT48 } from "./helpers/constants";
 import { trim0x } from "./helpers/trim-0x";
-import { Signature } from 'ethers';
+import { ethers, Signature } from 'ethers';
 function cutSelector(data: string): string {
     const hexPrefix = '0x'
     return hexPrefix + data.substr(hexPrefix.length + 8)
@@ -68,12 +67,11 @@ export class Permit2Utils {
             chainId
         );
 
-        const dataHash = TypedDataUtils.hashStruct(
+        const dataHash = ethers.TypedDataEncoder.hashStruct(
             'PermitSingle',
-            permitData.values as unknown as never,
             permitData.types,
-            SignTypedDataVersion.V4
-        ).toString('hex');
+            permitData.values
+        )
 
         const typedData = buildPermit2TypedData(permitData);
 

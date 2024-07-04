@@ -1,41 +1,43 @@
 import {ProviderConnector} from './provider.connector';
-import Web3 from 'web3';
 import {EIP712TypedData} from '../model/eip712.model';
-import {AbiItem} from '../model/abi.model';
-import {AbiInput, AbiItem as Web3AbiItem} from 'web3-utils';
-import {signTypedData, SignTypedDataVersion} from '@metamask/eth-sig-util';
+import {AbiInput, AbiItem} from '../model/abi.model';
+import {Interface, ParamType, Wallet, InterfaceAbi} from 'ethers'
+import {add0x} from '../helpers/add-0x';
+import {TypedDataDomain} from 'ethers/src.ts/hash';
+import {abiCoder} from './abi-coder';
+import {Web3Like} from './web3';
 
 export class PrivateKeyProviderConnector implements ProviderConnector {
+
+    private readonly wallet: Wallet
+
     constructor(
-        private readonly privateKey: string,
-        protected readonly web3Provider: Web3
-    ) {}
+        readonly privateKey: string,
+        protected readonly web3Provider: Web3Like
+    ) {
+        this.wallet = new Wallet(add0x(privateKey))
+    }
 
     contractEncodeABI(
         abi: AbiItem[],
-        address: string | null,
+        _address: string | null,
         methodName: string,
         methodParams: unknown[]
     ): string {
-        const contract = new this.web3Provider.eth.Contract(
-            abi as Web3AbiItem[],
-            address === null ? undefined : address
-        );
-
-        return contract.methods[methodName](...methodParams).encodeABI();
+        const contract = new Interface(abi as InterfaceAbi)
+        return contract.encodeFunctionData(methodName, methodParams).toString()
     }
 
     signTypedData(
         _walletAddress: string,
         typedData: EIP712TypedData,
-        /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
         _typedDataHash = ''
     ): Promise<string> {
-        const result = signTypedData({
-            privateKey: Buffer.from(this.privateKey, 'hex'),
-            data: typedData,
-            version: SignTypedDataVersion.V4,
-        });
+        const result = this.wallet.signTypedData(
+            typedData.domain as TypedDataDomain,
+            typedData.types,
+            typedData.message
+        )
 
         return Promise.resolve(result);
     }
@@ -48,10 +50,11 @@ export class PrivateKeyProviderConnector implements ProviderConnector {
     }
 
     decodeABIParameter<T>(type: string, hex: string): T {
-        return this.web3Provider.eth.abi.decodeParameter(type, hex) as T;
+        return abiCoder.decode([type], hex)[0] as T;
     }
 
     decodeABIParameters<T>(types: AbiInput[], hex: string): T {
-        return this.web3Provider.eth.abi.decodeParameters(types, hex) as T;
+        const formattedTypes: ReadonlyArray<ParamType> = types.map((type) => ParamType.from(type))
+        return abiCoder.decode(formattedTypes, hex) as T;
     }
 }

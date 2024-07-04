@@ -1,16 +1,10 @@
-import Web3 from 'web3';
 import { eip2612PermitModelFields, TOKEN_ADDRESSES_WITH_SALT } from './eip-2612-permit.const';
-import { EIP712Object, EIP712TypedData } from './model/eip712.model';
+import {EIP712Object, EIP712TypedData} from './model/eip712.model';
 import { DaiPermitParams, PermitParams } from './model/permit.model';
 import {PermitTypedDataParamsModel} from './model/permit-typed-data-params.model';
 import { AllowanceTransfer } from "@uniswap/permit2-sdk";
 import { Eip712Permit2 } from "./model/eip712-permit2.model";
-
-export function inputIsNotNullOrUndefined<T>(
-    input: null | undefined | T
-): input is T {
-    return input !== null && input !== undefined;
-}
+import {abiCoder} from './connector/abi-coder';
 
 // eslint-disable-next-line max-lines-per-function
 export function buildPermitTypedData(data: PermitTypedDataParamsModel): EIP712TypedData {
@@ -32,13 +26,6 @@ export function buildPermitTypedData(data: PermitTypedDataParamsModel): EIP712Ty
 
     return {
         types: {
-            EIP712Domain: [
-                {name: 'name', type: 'string'},
-                isDomainWithoutVersion ? null : {name: 'version', type: 'string'},
-                isSaltInsteadOfChainId ? null : {name: 'chainId', type: 'uint256'},
-                {name: 'verifyingContract', type: 'address'},
-                !isSaltInsteadOfChainId ? null : {name: 'salt', type: 'bytes32'},
-            ].filter(inputIsNotNullOrUndefined),
             Permit: permitModelFields,
         },
         primaryType: 'Permit',
@@ -122,14 +109,13 @@ export function buildTokenIdentifier(tokenAddress: string, chainId: number): str
 }
 
 function getSalt(data: PermitTypedDataParamsModel): string {
-    const web3 = new Web3();
     const { chainId, tokenAddress } = data;
     const identifier = buildTokenIdentifier(tokenAddress, chainId);
     if (TOKEN_ADDRESSES_WITH_SALT.includes(identifier)) {
-        return web3.eth.abi.encodeParameter('uint256', `${chainId}`)
+        return abiCoder.encode(['uint256'], [`${chainId}`])
     }
     console.warn(
         `mapper for token ${tokenAddress} from network chainId: ${chainId} not exist`
     )
-    return web3.eth.abi.encodeParameter('uint256', '0');
+    return abiCoder.encode(['uint256'], ['0'])
 }

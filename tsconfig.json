@@ -18,7 +18,7 @@
         "noFallthroughCasesInSwitch": true,
         "noUnusedLocals": true,
         "noImplicitReturns": true,
-        "noUnusedParameters": true,
+        "noUnusedParameters": false,
         "resolveJsonModule": true,
         "strictNullChecks": true,
         "typeRoots": ["node_modules/@types"],
