@@ -1,4 +1,3 @@
-import {AbiInput, AbiItem} from 'web3-utils';
 import {EIP712Parameter} from './model/eip712.model';
 
 export const EIP_2612_PERMIT_SELECTOR = '0xd505accf';
@@ -49,7 +48,7 @@ export const daiPermitModelFields: EIP712Parameter[] = [
     { name: 'allowed', type: 'bool' },
 ];
 
-export const ERC_20_NONCES_ABI: AbiItem[] = [
+export const ERC_20_NONCES_ABI = [
     {
         constant: true,
         inputs: [
@@ -128,7 +127,7 @@ export const ERC_20_NONCES_ABI: AbiItem[] = [
     },
 ];
 
-export const EIP_2612_PERMIT_ABI: AbiItem[] = [
+export const EIP_2612_PERMIT_ABI = [
     {
         constant: false,
         inputs: [
@@ -169,10 +168,10 @@ export const EIP_2612_PERMIT_ABI: AbiItem[] = [
     },
 ];
 
-export const EIP_2612_PERMIT_INPUTS = EIP_2612_PERMIT_ABI[0].inputs as AbiInput[];
+export const EIP_2612_PERMIT_INPUTS = EIP_2612_PERMIT_ABI[0].inputs
 
 
-export const DAI_EIP_2612_PERMIT_ABI: AbiItem[] = [
+export const DAI_EIP_2612_PERMIT_ABI = [
     {
         constant: false,
         inputs: [
@@ -225,9 +224,9 @@ export const DAI_EIP_2612_PERMIT_ABI: AbiItem[] = [
     },
 ];
 
-export const DAI_EIP_2612_PERMIT_INPUTS = DAI_EIP_2612_PERMIT_ABI[0].inputs as AbiInput[];
+export const DAI_EIP_2612_PERMIT_INPUTS = DAI_EIP_2612_PERMIT_ABI[0].inputs
 
-export const DOMAIN_TYPEHASH_ABI: AbiItem[] = [
+export const DOMAIN_TYPEHASH_ABI = [
     {
         constant: true,
         inputs: [],
@@ -245,7 +244,7 @@ export const DOMAIN_TYPEHASH_ABI: AbiItem[] = [
     },
 ];
 
-export const PERMIT_TYPEHASH_ABI: AbiItem[] = [
+export const PERMIT_TYPEHASH_ABI = [
     {
         constant: true,
         inputs: [],
@@ -263,7 +262,7 @@ export const PERMIT_TYPEHASH_ABI: AbiItem[] = [
     },
 ];
 
-export const DOMAIN_SEPARATOR_ABI: AbiItem[] = [
+export const DOMAIN_SEPARATOR_ABI = [
     {
         inputs: [],
         name: 'DOMAIN_SEPARATOR',
@@ -279,7 +278,7 @@ export const DOMAIN_SEPARATOR_ABI: AbiItem[] = [
     },
 ];
 
-export const VERSIONS_ABI: AbiItem[] = [
+export const VERSIONS_ABI = [
     {
         constant: true,
         inputs: [],

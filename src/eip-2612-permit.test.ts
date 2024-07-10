@@ -1,7 +1,8 @@
 import {Eip2612PermitUtils} from './eip-2612-permit.utils';
 import {PrivateKeyProviderConnector} from './connector/private-key-provider.connector';
-import Web3 from 'web3';
 import {DaiPermitParams, PermitParams} from './model/permit.model';
+import {TransactionConfig, Web3Like} from './connector/web3';
+import {JsonRpcProvider} from 'ethers';
 
 describe('Eip2612PermitUtils', () => {
     let eip2612PermitUtils: Eip2612PermitUtils;
@@ -30,7 +31,19 @@ describe('Eip2612PermitUtils', () => {
         nonce: 0,
         expiry: 192689033,
     };
-    const web3 = new Web3('https://bsc-dataseed.binance.org');
+
+    const web3: Web3Like = {
+        eth: {
+            call: async (transactionConfig: TransactionConfig): Promise<string> => {
+                const provider = new JsonRpcProvider('https://bsc-dataseed.binance.org')
+                return provider.call(transactionConfig)
+            }
+        },
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        extend(): any {
+            //
+        }
+    }
 
     const connector = new PrivateKeyProviderConnector(privateKey, web3);
 

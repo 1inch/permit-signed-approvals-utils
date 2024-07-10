@@ -1,28 +1,25 @@
 import {ProviderConnector} from './provider.connector';
-import Web3 from 'web3';
 import {EIP712TypedData} from '../model/eip712.model';
-import {AbiItem} from '../model/abi.model';
-import {AbiInput, AbiItem as Web3AbiItem} from 'web3-utils';
+import {AbiInput, AbiItem} from '../model/abi.model';
+import {Web3Like} from './web3';
+import {Interface, ParamType, InterfaceAbi} from 'ethers';
+import {abiCoder} from './abi-coder';
 
-interface ExtendedWeb3 extends Web3 {
+interface ExtendedWeb3 extends Web3Like {
     signTypedDataV4(walletAddress: string, typedData: string): Promise<string>;
 }
 
 export class Web3ProviderConnector implements ProviderConnector {
-    constructor(protected readonly web3Provider: Web3) {}
+    constructor(protected readonly web3Provider: Web3Like) {}
 
     contractEncodeABI(
         abi: AbiItem[],
-        address: string | null,
+        _address: string | null,
         methodName: string,
         methodParams: unknown[]
     ): string {
-        const contract = new this.web3Provider.eth.Contract(
-            abi as Web3AbiItem[],
-            address === null ? undefined : address
-        );
-
-        return contract.methods[methodName](...methodParams).encodeABI();
+        const contract = new Interface(abi as InterfaceAbi)
+        return contract.encodeFunctionData(methodName, methodParams).toString()
     }
 
     signTypedData(
@@ -50,10 +47,11 @@ export class Web3ProviderConnector implements ProviderConnector {
     }
 
     decodeABIParameter<T>(type: string, hex: string): T {
-        return this.web3Provider.eth.abi.decodeParameter(type, hex) as T;
+        return abiCoder.decode([type], hex)[0] as T;
     }
 
     decodeABIParameters<T>(types: AbiInput[], hex: string): T {
-        return this.web3Provider.eth.abi.decodeParameters(types, hex) as T;
+        const formattedTypes: ReadonlyArray<ParamType> = types.map((type) => ParamType.from(type))
+        return abiCoder.decode(formattedTypes, hex) as T;
     }
 }

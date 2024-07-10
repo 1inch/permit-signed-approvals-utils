@@ -1,6 +1,4 @@
-import {
-    recoverTypedSignature, SignTypedDataVersion, TypedDataUtils, TypedMessage
-} from '@metamask/eth-sig-util';
+
 import { ProviderConnector } from './connector/provider.connector';
 import {
     DAI_EIP_2612_PERMIT_ABI,
@@ -24,7 +22,6 @@ import {
     getPermitContractCallParams
 } from './eip-2612-permit.helper';
 import { ChainId } from './model/chain.model';
-import { MessageTypes } from './model/eip712.model';
 import { PermitRecoveryParams, SyncPermitRecoveryParams } from './model/permit-recovery.model';
 import {
     DaiDecodedPermitParams,
@@ -32,6 +29,7 @@ import {
     DecodedPermitParams,
     PermitParams
 } from './model/permit.model';
+import {ethers, TypedDataDomain, verifyTypedData} from 'ethers';
 
 
 interface Eip2612PermitUtilsOptions {
@@ -63,12 +61,12 @@ export class Eip2612PermitUtils {
             isDomainWithoutVersion: await this.isDomainWithoutVersion(tokenAddress),
             version
         });
-        const dataHash = TypedDataUtils.hashStruct(
+
+        const dataHash = ethers.TypedDataEncoder.hashStruct(
             permitData.primaryType,
-            permitData.message,
             permitData.types,
-            SignTypedDataVersion.V4
-        ).toString('hex');
+            permitData.message
+        )
 
         return this.connector.signTypedData(permitParams.owner, permitData, dataHash);
     }
@@ -111,12 +109,12 @@ export class Eip2612PermitUtils {
             version,
             permitModelFields: daiPermitModelFields
         });
-        const dataHash = TypedDataUtils.hashStruct(
+
+        const dataHash = ethers.TypedDataEncoder.hashStruct(
             permitData.primaryType,
-            permitData.message,
             permitData.types,
-            SignTypedDataVersion.V4
-        ).toString('hex');
+            permitData.message
+        )
 
         return this.connector.signTypedData(params.holder, permitData, dataHash);
     }
@@ -181,11 +179,22 @@ export class Eip2612PermitUtils {
             version
         });
 
-        return recoverTypedSignature({
-            data: permitData as TypedMessage<MessageTypes>,
-            signature: '0x' + r.slice(2) + s.slice(2) + (+v).toString(16),
-            version: SignTypedDataVersion.V4
-        });
+        return verifyTypedData(
+            {
+                name: permitData.domain.name,
+                version: permitData.domain.version,
+                chainId: permitData.domain.chainId,
+                verifyingContract: permitData.domain.verifyingContract,
+                salt: permitData.domain.salt
+            } as TypedDataDomain,
+            permitData.types,
+            permitData.message,
+            {
+                r,
+                s,
+                v
+            }
+        ).toLowerCase();
     }
 
     async recoverDaiLikePermitOwnerFromCallData(params: PermitRecoveryParams): Promise<string> {
@@ -224,11 +233,22 @@ export class Eip2612PermitUtils {
             permitModelFields: daiPermitModelFields
         });
 
-        return recoverTypedSignature({
-            data: permitData as TypedMessage<MessageTypes>,
-            signature: '0x' + r.slice(2) + s.slice(2) + (+v).toString(16),
-            version: SignTypedDataVersion.V4,
-        });
+        return verifyTypedData(
+            {
+                name: permitData.domain.name,
+                version: permitData.domain.version,
+                chainId: permitData.domain.chainId,
+                verifyingContract: permitData.domain.verifyingContract,
+                salt: permitData.domain.salt
+            } as TypedDataDomain,
+            permitData.types,
+            permitData.message,
+            {
+                r,
+                s,
+                v
+            }
+        ).toLowerCase();
     }
 
     getTokenNonce(

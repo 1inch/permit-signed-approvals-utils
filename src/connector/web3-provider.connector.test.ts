@@ -1,12 +1,10 @@
 import {Web3ProviderConnector} from './web3-provider.connector';
-import Web3 from 'web3';
-import { anything, instance, mock, verify, when } from 'ts-mockito';
-import {Eth} from 'web3-eth';
+import { anything, instance, mock, when } from 'ts-mockito';
 import {buildPermitTypedData} from '../eip-2612-permit.helper';
-import {EIP_2612_PERMIT_ABI} from '../eip-2612-permit.const';
+import {Web3Like} from './web3';
 
 describe('Web3ProviderConnector', () => {
-    let web3Provider: Web3;
+    let web3Provider: Web3Like;
     let web3ProviderConnector: Web3ProviderConnector;
 
     const tokenAddress = '0x111111111117dc0aa78b770fa6a738034120c302';
@@ -20,7 +18,7 @@ describe('Web3ProviderConnector', () => {
     );
 
     beforeEach(() => {
-        web3Provider = mock<Web3>();
+        web3Provider = mock<Web3Like>();
         web3ProviderConnector = new Web3ProviderConnector(
             instance(web3Provider)
         );
@@ -38,28 +36,6 @@ describe('Web3ProviderConnector', () => {
         await web3ProviderConnector.signTypedData(walletAddress, typedData, '');
 
         expect(extendedWeb3.signTypedDataV4).toHaveBeenCalledWith(walletAddress, JSON.stringify(typedData));
-    });
-
-    it('contractEncodeABI() changed address from null to undefined for contract instance', async () => {
-        const eth = mock<Eth>();
-        class ContractMock {
-            methods = {
-                foo: () => ({encodeABI: () => ''}),
-            };
-        }
-
-        /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-        when(eth.Contract).thenReturn(ContractMock as any);
-        when(web3Provider.eth).thenReturn(instance(eth));
-
-        web3ProviderConnector.contractEncodeABI(
-            EIP_2612_PERMIT_ABI,
-            null,
-            'foo',
-            []
-        );
-
-        verify(eth.Contract).once();
     });
 
     it('ethCall() should create a contact call', async () => {
@@ -90,26 +66,11 @@ describe('Web3ProviderConnector', () => {
     });
 
     it('decodeABIParameter()', () => {
-        const decodeParameter = jest.fn();
-        const expectedResult = 'test';
-        const type = 'type';
-        const hex = 'hex';
-
-        when(web3Provider.eth).thenReturn({
-            abi: {
-                decodeParameter
-            }
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } as any);
-        decodeParameter.mockReturnValue(expectedResult);
-
         const result = web3ProviderConnector.decodeABIParameter(
-            type,
-            hex
+            'uint256',
+            '0x0000000000000000000000000000000000000000000000000000000000000110'
         );
 
-        expect(result).toBe(expectedResult);
-        expect(decodeParameter).toHaveBeenCalledTimes(1);
-        expect(decodeParameter).toHaveBeenCalledWith(type, hex);
+        expect(result).toBe(272n)
     });
 });

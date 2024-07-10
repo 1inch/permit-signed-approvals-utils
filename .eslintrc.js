@@ -14,12 +14,18 @@ module.exports = {
         'no-unused-vars': 'off',
         'max-len': ['error', {code: 100}],
         'max-depth': ['error', 3],
-        'max-lines-per-function': ['error', 32],
+        'max-lines-per-function': ['error', 40],
         'max-params': ['error', 6],
         '@typescript-eslint/no-explicit-any': 'error',
-        '@typescript-eslint/no-unused-vars': 'error',
-        'unused-imports/no-unused-imports': 'error',
-        'unused-imports/no-unused-vars': 0,
+        '@typescript-eslint/no-unused-vars': [
+            "warn",
+            {
+                "argsIgnorePattern": "^_",
+                "varsIgnorePattern": "^_",
+                "caughtErrorsIgnorePattern": "^_"
+            }
+        ],
+        'unused-imports/no-unused-imports': 'error'
     },
     overrides: [
         {

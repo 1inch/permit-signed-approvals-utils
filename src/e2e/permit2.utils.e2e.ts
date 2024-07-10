@@ -1,9 +1,8 @@
 import { ethers } from "hardhat";
 import { deploySwapTokens } from "./helpers/fixtures";
 import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
-import { Permit2Utils } from "../permit2.utils";
+import {Permit2Address, Permit2Utils} from "../permit2.utils";
 import { getProviderConnector, Signer } from "./helpers/provider-connector.mock";
-import { MaxUint256, PERMIT2_ADDRESS } from "@uniswap/permit2-sdk";
 import { expect } from 'chai';
 import { decodeUncompressedPermitSingle } from "./helpers/decode-uncompressed-permit-single";
 import { createPermit2ContractAndDeploy } from "./helpers/create-permit2-contract-and-deployt";
@@ -66,7 +65,7 @@ describe('permit2',  () => {
 
         describe('decompressed singlePermit',  () => {
             it('infinite expiry', async () => {
-                await dai.connect(addr1).approve(PERMIT2_ADDRESS, 1);
+                await dai.connect(addr1).approve(Permit2Address, 1);
 
                 const decompressedPermit = await permit2Builder.buildPermit2({
                     walletAddress: await addr1.getAddress(),
@@ -89,7 +88,7 @@ describe('permit2',  () => {
             });
 
             it('set expiry & sigDeadline', async () => {
-                await dai.connect(addr1).approve(PERMIT2_ADDRESS, MaxUint256.toBigInt());
+                await dai.connect(addr1).approve(Permit2Address, ethers.MaxUint256);
 
                 const deadline = Math.round((Date.now() / 1000)) + 3000;
 

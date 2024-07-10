@@ -1,5 +1,5 @@
 export interface EIP712TypedData {
-    types: EIP712Types & { EIP712Domain: EIP712Parameter[] };
+    types: EIP712Types
     domain: EIP712Object;
     message: EIP712Object;
     primaryType: string;

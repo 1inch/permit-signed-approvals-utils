@@ -1,13 +1,11 @@
-import Web3 from 'web3';
-import {instance, mock, verify, when} from 'ts-mockito';
-import {Eth} from 'web3-eth';
+import {instance, mock} from 'ts-mockito';
 import {PrivateKeyProviderConnector} from './private-key-provider.connector';
 import {buildPermitTypedData} from '../eip-2612-permit.helper';
-import {EIP_2612_PERMIT_ABI} from '../eip-2612-permit.const';
 import {PermitParams} from '../model/permit.model';
+import {Web3Like} from './web3';
 
 describe('PrivateKeyProviderConnector', () => {
-    let web3Provider: Web3;
+    let web3Provider: Web3Like;
     let privateKeyProviderConnector: PrivateKeyProviderConnector;
 
     const testPrivateKey =
@@ -33,7 +31,7 @@ describe('PrivateKeyProviderConnector', () => {
     });
 
     beforeEach(() => {
-        web3Provider = mock<Web3>();
+        web3Provider = mock<Web3Like>();
         privateKeyProviderConnector = new PrivateKeyProviderConnector(
             testPrivateKey,
             instance(web3Provider)
@@ -54,27 +52,5 @@ describe('PrivateKeyProviderConnector', () => {
         );
 
         expect(signature).toBe(expectedSignature);
-    });
-
-    it('contractEncodeABI() changed address from null to undefined for contract instance', async () => {
-        const eth = mock<Eth>();
-        class ContractMock {
-            methods = {
-                foo: () => ({encodeABI: () => ''}),
-            };
-        }
-
-        /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-        when(eth.Contract).thenReturn(ContractMock as any);
-        when(web3Provider.eth).thenReturn(instance(eth));
-
-        privateKeyProviderConnector.contractEncodeABI(
-            EIP_2612_PERMIT_ABI,
-            null,
-            'foo',
-            []
-        );
-
-        verify(eth.Contract).once();
     });
 });
