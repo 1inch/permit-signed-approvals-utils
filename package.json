@@ -1,11 +1,11 @@
 {
     "name": "@1inch/permit-signed-approvals-utils",
-    "version": "1.5.1",
+    "version": "1.5.2",
     "description": "Utils library for EIP-2612: permit – 712-signed approvals",
     "main": "index.js",
     "scripts": {
         "prebuild": "rm -rf dist && yarn run test:coverage && yarn run make-badges",
-        "build": "tsc --module es2020",
+        "build": "tsc",
         "postbuild": "cp package.json dist && cp README.md dist",
         "lint": "eslint ./src --ext .js,.ts",
         "release": "standard-version",
